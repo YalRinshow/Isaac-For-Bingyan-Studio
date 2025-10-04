@@ -22,6 +22,10 @@ public class Constants : MonoBehaviour
     public static int ENEMY_COLISION_DAMAGE = 1;
     public static float ENEMY_DEFAULT_HEALTH = 3;
 
+    public static int ROOM_HEIGHT = 9;
+    public static int ROOM_WIDTH = 14;
+    public static int ROOM_DEFAULT_NUMBER = 10;
+
     public static string PREFAB_NOT_FOUND = "prefab not found!";
 
     public static string TAG_PLAYER = "Player";

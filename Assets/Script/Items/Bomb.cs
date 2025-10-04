@@ -6,10 +6,8 @@ using UnityEngine;
 public class Bomb : MonoBehaviour
 {
     private float lifetime = Constants.BOMB_LIFETIME;
-    private bool explode = false;
     private float damageRadius = Constants.BOMB_RADIUS;
     private int bombDamage = Constants.BOMB_DAMAGE;
-    private float startTime;
     public Collider2D explosionCollider;
     private void Start()
     {

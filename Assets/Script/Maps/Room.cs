@@ -12,11 +12,10 @@ public class Room : MonoBehaviour
     public float[] doorRotation = new float[4];
     public bool isEnemyClear = false;
     public bool isActivated = false;
-    private void Start()
+    public void Initialize(bool enemyClear = false, bool activate = false)
     {
-    }
-    public void Initialize()
-    {
+        isEnemyClear = enemyClear;
+        isActivated = activate;
         doorPosition[0] = new Vector2(0, 3.4f);
         doorRotation[0] = 0.0f;
         doorPosition[1] = new Vector2(0, -4.4f);
@@ -25,8 +24,8 @@ public class Room : MonoBehaviour
         doorRotation[2] = 90.0f;
         doorPosition[3] = new Vector2(6.4f, 0);
         doorRotation[3] = -90.0f;
-        spawnPosition[0] = new Vector2(0, 3.1f);
-        spawnPosition[1] = new Vector2(0, -3.3f);
+        spawnPosition[0] = new Vector2(0, 2.2f);
+        spawnPosition[1] = new Vector2(0, -3.0f);
         spawnPosition[2] = new Vector2(-5.0f, 0);
         spawnPosition[3] = new Vector2(5.0f, 0);
     }

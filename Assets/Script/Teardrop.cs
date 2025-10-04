@@ -17,19 +17,9 @@ public class Teardrop : MonoBehaviour
         cdTeardrop = GetComponent<Collider2D>();
         Destroy(gameObject, lifetime);
     }
-    private void Update()
-    {
-    }
     void FixedUpdate()
     {
-        //if (MapColisionCheck())
-        //{
-            transform.Translate(direction * speedMove * Time.deltaTime);
-        //}
-        //else
-        //{
-            //Destroy(gameObject);
-        //}
+        transform.Translate(direction * speedMove * Time.deltaTime);
     }
     public void SetDirection(Vector2 direction)
     {
