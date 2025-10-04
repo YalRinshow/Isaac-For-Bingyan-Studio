@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Enemy_AttackFly : Enemy
 {
-    public void Initialize(bool eilite = false, HashSet<string> items = null)
+    public override void Initialize(bool eilite = false)
     {
         health = 5.0f;
         rbEnemy = GetComponent<Rigidbody2D>();
         isEilite = eilite;
-        droppedItems = items;
         speedMove= 0.4f;
         flyingEnemy = true;
+        Debug.Log("fly");
     }
     private void FixedUpdate()
     {

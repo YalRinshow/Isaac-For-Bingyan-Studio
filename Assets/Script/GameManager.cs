@@ -6,8 +6,6 @@ using UnityEngine.Rendering.LookDev;
 
 public class GameManager : MonoBehaviour
 {
-    public Enemy_AttackFly flyA;
-    public Enemy_NerveEnding nerveA;
     public GameObject gameOverPanel;
     public GameObject gameScene;
     public GameObject UIPanel;
@@ -27,6 +25,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameOverPanel.SetActive(false);
+        Prefabs.LoadPrefabs();
         LoadMapAndEnemy();
     }
     void LoadMapAndEnemy()

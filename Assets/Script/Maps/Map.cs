@@ -10,8 +10,6 @@ public class Map : MonoBehaviour
     public int height = Constants.ROOM_HEIGHT;
     public int width = Constants.ROOM_WIDTH;
     public Transform gridMap;
-    public GameObject roomPrefab;
-    public GameObject doorPrefab;
     public Sprite bossRoomDoor;
 
     public static Vector3[] roomDistanceDelta = new Vector3[4];
@@ -66,12 +64,12 @@ public class Map : MonoBehaviour
         roomDistanceDelta[2] = new Vector3(0 - width * 2, 0, 0);
         roomDistanceDelta[3] = new Vector3(width * 2, 0, 0);
 
-        GameObject startRoomPrefab = Instantiate(Instance.roomPrefab, Instance.gridMap);
+        GameObject startRoomPrefab = Instantiate(Prefabs.roomPrefab, Instance.gridMap);
         startRoomPrefab.transform.localPosition = new Vector3(0, 0, 20);
         startRoomPrefab.transform.localRotation = Quaternion.identity;
         Room startRoom = startRoomPrefab.GetComponent<Room>();
         rooms.Add(startRoom);
-        startRoom.Initialize(true, true);
+        startRoom.Initialize(true);
         roomInfo.Add(new connectInfo());
 
         Player.Instance.transform.SetParent(startRoomPrefab.transform, false);
@@ -151,14 +149,14 @@ public class Map : MonoBehaviour
     }
     private static void GenerateRoom(int roomNumber, int roomDir, bool isDoorOpen = false, bool isToBossRoom = false)
     {
-        GameObject newRoomPrefab = Instantiate(Instance.roomPrefab, Instance.gridMap);
+        GameObject newRoomPrefab = Instantiate(Prefabs.roomPrefab, Instance.gridMap);
         newRoomPrefab.transform.localPosition = rooms[roomNumber].transform.localPosition + roomDistanceDelta[roomDir];
         newRoomPrefab.transform.localRotation = Quaternion.identity;
         Room newRoom = newRoomPrefab.GetComponent<Room>();
         rooms.Add(newRoom);
-        newRoom.Initialize(true, true);
+        newRoom.Initialize(false);
 
-        GameObject newDoorPrefab = Instantiate(Instance.doorPrefab, rooms[roomNumber].transform);
+        GameObject newDoorPrefab = Instantiate(Prefabs.doorPrefab, rooms[roomNumber].transform);
         newDoorPrefab.transform.localPosition = rooms[roomNumber].doorPosition[roomDir];
         newDoorPrefab.transform.localRotation = Quaternion.Euler(0, 0, rooms[roomNumber].doorRotation[roomDir]);
         Door newDoor = newDoorPrefab.GetComponent<Door>();
@@ -166,7 +164,7 @@ public class Map : MonoBehaviour
         newDoor.roomDir = roomDir;
         newDoor.roomNumber = roomNumber;
 
-        GameObject newRoomDoorPrefab = Instantiate(Instance.doorPrefab, newRoomPrefab.transform);
+        GameObject newRoomDoorPrefab = Instantiate(Prefabs.doorPrefab, newRoomPrefab.transform);
         newRoomDoorPrefab.transform.localPosition = newRoom.doorPosition[roomDir ^ 1];
         newRoomDoorPrefab.transform.localRotation = Quaternion.Euler(0, 0, newRoom.doorRotation[roomDir ^ 1]);
         Door newRoomDoor = newRoomDoorPrefab.GetComponent<Door>();
@@ -198,7 +196,7 @@ public class Map : MonoBehaviour
     }
     public static bool CurrentRoomEnemyClear()
     {
-        return rooms[currentRoomNumber].isEnemyClear;
+        return rooms[currentRoomNumber].EnemyClear();
     }
     public enum direction
     {

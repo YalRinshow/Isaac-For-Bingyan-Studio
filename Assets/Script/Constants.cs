@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour
 {
-    public static float PLAYER_MOVE_SPEED = 4.0f;
+    public static float PLAYER_MOVE_SPEED = 3.0f;
 
     public static float TEARDROP_LIFETIME = 0.6f;
     public static float TEARDROP_FIRE_RATE = 0.2f;

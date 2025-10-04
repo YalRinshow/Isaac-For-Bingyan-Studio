@@ -16,17 +16,8 @@ public class Enemy : MonoBehaviour
     public bool flyingEnemy = false;
 
     public bool teardropEffective = true;
-
-    private void Start()
+    public virtual void Initialize(bool eilite)
     {
-        Initialize();
-    }
-    public void Initialize(bool eilite = false, HashSet<string>items = null)
-    {
-        //health = Constants.ENEMY_DEFAULT_HEALTH;
-        rbEnemy = GetComponent<Rigidbody2D>();
-        isEilite = eilite;
-        droppedItems = items;
     }
     public void TakeDamage(float damage)
     {

@@ -32,7 +32,7 @@ public class Bomb : MonoBehaviour
             }
             else if (hitCollider.CompareTag(Constants.TAG_PLAYER))
             {
-                Player.Instance.TakeDamage(bombDamage);
+                Player.Instance.TakeDamage(1);
             }
             else if (hitCollider.CompareTag(Constants.TAG_GROUND))
             {

@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject teardropPrefab;
-    public GameObject bombPrefab;
     public Rigidbody2D rbPlayer;
     private float speedMove = Constants.PLAYER_MOVE_SPEED;
     private float nextFire = 0.0f;
-    // Start is called before the first frame update
 
     public GameObject bomb;
     private int bombNumber = 10;
@@ -37,8 +34,6 @@ public class Player : MonoBehaviour
     {
         Initialize();
     }
-
-    // Update is called once per frame
     private void Update()
     {
         TeardropCheck();
@@ -91,7 +86,7 @@ public class Player : MonoBehaviour
         {
             bombNumber--;
             bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
-            GameObject createBomb = Instantiate(bombPrefab, rbPlayer.position, Quaternion.identity);
+            GameObject createBomb = Instantiate(Prefabs.bombPrefab, rbPlayer.position, Quaternion.identity);
         }
     }
     public void GetBomb()
@@ -106,11 +101,7 @@ public class Player : MonoBehaviour
     }
     private void ShootTeardrop(Vector2 direction)
     {
-        if (teardropPrefab == null)
-        {
-            Debug.LogError(Constants.PREFAB_NOT_FOUND);
-        }
-        GameObject teardrop = Instantiate(teardropPrefab, rbPlayer.position, Quaternion.identity);
+        GameObject teardrop = Instantiate(Prefabs.teardropPrefab, rbPlayer.position, Quaternion.identity);
         Teardrop teardropPhysics= teardrop.GetComponent<Teardrop>();
         teardropPhysics.SetDirection(direction);
     }
