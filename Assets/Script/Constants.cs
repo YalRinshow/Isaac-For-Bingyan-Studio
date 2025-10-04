@@ -40,4 +40,13 @@ public class Constants : MonoBehaviour
 
     public static string GAME_OVER_WIN = "Game Over!"+"\n"+"You Win!";
     public static string GAME_OVER_LOSE = "Game Over!"+"\n"+"You Lose!";
+
+    public static string MUSIC_FILE = "Music/";
+    public static string MUSIC_MENU = "MenuMusic";
+    public static string MUSIC_GAME = "GameMusic";
+    public static string MUSIC_BOSS = "BossMusic";
+    public static string MUSIC_GAMEOVER_LOSE = "LoseMusic";
+    public static string MUSIC_GAMEOVER_WIN = "WinMusic";
+
+    public static string AUDIO_LOAD_FAILED = "Failed to load audio : ";
 }

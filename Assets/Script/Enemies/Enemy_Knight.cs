@@ -20,14 +20,17 @@ public class Enemy_Knight : Enemy
     private bool isCharging = false;
     public GameObject head;
     public Head enemyHead;
-    public override void Initialize(bool eilite = false)
+    public override void Initialize(bool dropKey = false)
     {
         health = 30.0f;
         collisionDamage = 1;
         rbEnemy = GetComponent<Rigidbody2D>();
-        isEilite = eilite;
         speedMove = 1.0f;
         enemyHead = head.GetComponent<Head>();
+        droppedItems.Add(ItemManager.ItemType.Key);
+        droppedItems.Add(ItemManager.ItemType.Bomb);
+        droppedItems.Add(ItemManager.ItemType.Heart);
+        GetDropItem(dropKey);
     }
     private void FixedUpdate()
     {

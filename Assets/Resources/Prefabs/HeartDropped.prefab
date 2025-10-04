@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3630464979061854621}
   - component: {fileID: 7827646791868963044}
   - component: {fileID: 8815352168789060729}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HeartDropped
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7023950639267193667}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.442, y: 0.5109, z: -36.672794}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7362366, y: 8.938797, z: 15}
   m_LocalScale: {x: 3.4250097, y: 3.4250097, z: 3.4250097}
   m_ConstrainProportionsScale: 0
   m_Children: []

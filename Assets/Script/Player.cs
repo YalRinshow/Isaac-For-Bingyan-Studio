@@ -10,10 +10,10 @@ public class Player : MonoBehaviour
     private float nextFire = 0.0f;
 
     public GameObject bomb;
-    private int bombNumber = 10;
+    private int bombNumber = 3;
 
     public GameObject key;
-    public int keyNumber = 2;
+    public int keyNumber = 0;
 
     private int playerHealth = Constants.PLAYER_HEALTH_LIMIT;
 

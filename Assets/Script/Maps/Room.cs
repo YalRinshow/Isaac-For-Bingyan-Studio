@@ -14,6 +14,7 @@ public class Room : MonoBehaviour
     public bool isActivated = false;
     private List<Vector2> availablePositions = new List<Vector2>();
     private List<bool> usedPosition = new List<bool>();
+    private bool haveKey = false;
     public void Initialize(bool enemyClear = false, bool activate = false)
     {
         isEnemyClear = enemyClear;
@@ -38,6 +39,10 @@ public class Room : MonoBehaviour
         if (EnemyClear())
         {
             isEnemyClear = true;
+            if (Map.currentRoomNumber == Map.rooms.Count - 1)
+            {
+                GameManager.Instance.GameOver(true);
+            }
             UIManager.Instance.UpdateEnergy(1);
         }
     }
@@ -86,7 +91,7 @@ public class Room : MonoBehaviour
         for (int i = 0; i < size && randEnemis > 0; i++)
         {
             if (usedPosition[i]) continue;
-            GenerateEnemy(availablePositions[i]);
+            GenerateEnemy(availablePositions[i], randEnemis == 1 && !haveKey);
             randEnemis--;
             usedPosition[i] = true;
         }
@@ -99,20 +104,20 @@ public class Room : MonoBehaviour
             usedPosition[i] = true;
         }
     }
-    private void GenerateEnemy(Vector2 position)
+    private void GenerateEnemy(Vector2 position, bool dropKey = false)
     {
         int randEnemy = Random.Range(0, 7);
         if (randEnemy == 0)
         {
-            GenerateObject(Prefabs.knightPrefab, position, true);
+            GenerateObject(Prefabs.knightPrefab, position, true, dropKey);
         }
         else if (randEnemy % 2 == 1)
         {
-            GenerateObject(Prefabs.attackFlyPrefab, position, true);
+            GenerateObject(Prefabs.attackFlyPrefab, position, true, dropKey);
         }
         else
         {
-            GenerateObject(Prefabs.nerveEndingPrefab, position, true);
+            GenerateObject(Prefabs.nerveEndingPrefab, position, true, dropKey);
         }
         
     }
@@ -128,7 +133,7 @@ public class Room : MonoBehaviour
             GenerateObject(Prefabs.rockPrefab, position);
         }
     }
-    private void GenerateObject(GameObject prefab, Vector2 position, bool isEnemy = false)
+    private void GenerateObject(GameObject prefab, Vector2 position, bool isEnemy = false, bool dropKey = false)
     {
         GameObject newObject = Instantiate(prefab, transform);
         newObject.transform.localPosition = new Vector3(position.x, position.y ,15);
@@ -137,7 +142,11 @@ public class Room : MonoBehaviour
         {
             newObject.transform.localPosition = new Vector3(position.x, position.y ,10);
             Enemy enemy = newObject.GetComponent<Enemy>();
-            enemy.Initialize(false);
+            enemy.Initialize(dropKey);
+            if (enemy.droppedItemType == ItemManager.ItemType.Key)
+            {
+                haveKey = true;
+            }
         }
     }
     private bool AvailabeForSpikes(Vector2 position)

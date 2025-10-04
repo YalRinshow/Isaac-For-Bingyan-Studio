@@ -16,15 +16,16 @@ public class Map : MonoBehaviour
     private class connectInfo
     {
         public int[] connectedRoomNumber = new int[4];
+        public Door[] doors = new Door[4];
     }
     private static List<connectInfo> roomInfo = new List<connectInfo>();
-    private static List<Room> rooms = new List<Room>();
+    public static List<Room> rooms = new List<Room>();
     private class roomGenerateInfo
     {
         public int roomNumber;
         public Vector2 roomPosition;
     }
-    static int currentRoomNumber;
+    public static int currentRoomNumber;
     int roomTotal = 0;
     public struct point
     {
@@ -94,7 +95,7 @@ public class Map : MonoBehaviour
                 point nextPoint = currentPoint + dir[randDir];
                 if (visPoints.ContainsKey(nextPoint)) continue;
                 connectRooms--;
-                GenerateRoom(currentRoom, randDir, true);
+                GenerateRoom(currentRoom, randDir, currentRoom == 0);
                 roomTotal++;
                 visPoints.Add(nextPoint, rooms.Count - 1);
                 roomPoints.Enqueue(nextPoint);
@@ -110,7 +111,7 @@ public class Map : MonoBehaviour
                 int randDir = GetRandomDir();
                 point nextPoint = currentPoint + dir[randDir];
                 if (visPoints.ContainsKey(nextPoint)) continue;
-                GenerateRoom(currentRoom, randDir, true, true);
+                GenerateRoom(currentRoom, randDir, false, true);
                 isBossRoomGenerated = true;
                 break;
             }
@@ -182,17 +183,25 @@ public class Map : MonoBehaviour
 
         roomInfo.Add(new connectInfo());
         roomInfo[roomNumber].connectedRoomNumber[roomDir] = rooms.Count - 1;
+        roomInfo[roomNumber].doors[roomDir] = newDoor;
         roomInfo[rooms.Count - 1].connectedRoomNumber[roomDir ^ 1] = roomNumber;
+        roomInfo[rooms.Count - 1].doors[roomDir ^ 1] = newRoomDoor;
     }
     public static void RoomTransfer(int roomNumber, int roomDir)
     {
         int nextRoom = roomInfo[roomNumber].connectedRoomNumber[roomDir];
         int nextDir = roomDir ^ 1;
         rooms[nextRoom].GenerateEnemisAndGround();
+        Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
+        nextRoomDoor.isOpen = true;
         Player.Instance.transform.SetParent(rooms[nextRoom].transform, false);
         Player.Instance.transform.localPosition = rooms[nextRoom].spawnPosition[nextDir];
         Player.Instance.transform.rotation = Quaternion.identity;
         currentRoomNumber = nextRoom;
+        if (currentRoomNumber == rooms.Count - 1)
+        {
+            GameManager.Instance.PlayBossMusic();
+        }
     }
     public static bool CurrentRoomEnemyClear()
     {

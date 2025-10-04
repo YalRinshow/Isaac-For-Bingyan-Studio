@@ -28,18 +28,28 @@ public class Bomb : MonoBehaviour
             if (hitCollider.CompareTag(Constants.TAG_ENEMY))
             {
                 var enemy = hitCollider.GetComponentInParent<Enemy>();
-                enemy.TakeDamage(bombDamage);
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(bombDamage);
+                }
             }
             else if (hitCollider.CompareTag(Constants.TAG_PLAYER))
             {
-                Player.Instance.TakeDamage(1);
+                var player = hitCollider.GetComponentInParent<Player>();
+                if (player != null)
+                {
+                    Player.Instance.TakeDamage(1);
+                }
             }
             else if (hitCollider.CompareTag(Constants.TAG_GROUND))
             {
                 var ground = hitCollider.GetComponent<Ground>();
-                if (ground is Rock)
+                if (ground != null)
                 {
-                    ground.Exploded();
+                    if (ground is Rock)
+                    {
+                        ground.Exploded();
+                    }
                 }
             }
         }
