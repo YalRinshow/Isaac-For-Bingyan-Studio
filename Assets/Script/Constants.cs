@@ -6,6 +6,8 @@ using UnityEngine;
 public class Constants : MonoBehaviour
 {
     public static float PLAYER_MOVE_SPEED = 2.0f;
+    public static int PLAYER_HEALTH_LIMIT = 6;
+    public static float PLAYER_I_FRAMES_TIME = 2.0f;
 
     public static float TEARDROP_LIFETIME = 0.6f;
     public static float TEARDROP_FIRE_RATE = 0.2f;

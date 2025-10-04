@@ -15,12 +15,14 @@ public class Player : MonoBehaviour
     public GameObject key;
     public int keyNumber = 2;
 
-    public int playerHealth = 6;
+    private int playerHealth = Constants.PLAYER_HEALTH_LIMIT;
 
     public GameObject head;
-    public Head playerHead;
-
+    private Head playerHead;
     public static Player Instance { get; private set; }
+
+    private float lastIFrames = 0.0f;
+    private bool isInIFrames = false;
 
     private void Awake()
     {
@@ -39,8 +41,18 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        IFramesCheck();
         TeardropCheck();
         ItemCheck();
+    }
+    private void IFramesCheck()
+    {
+        if (!isInIFrames) return;
+        if (Time.time > lastIFrames + Constants.PLAYER_I_FRAMES_TIME)
+        {
+            isInIFrames = false;
+            playerHead.StopFlash();
+        }
     }
     private void FixedUpdate()
     {
@@ -105,10 +117,21 @@ public class Player : MonoBehaviour
         bombNumber++;
         bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
     }
+    public void GetKey()
+    {
+        keyNumber++;
+        key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
+    }
     public void UseKey()
     {
         keyNumber--;
         key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
+    }
+    public void GetHeart()
+    {
+        if (playerHealth == Constants.PLAYER_HEALTH_LIMIT) return;
+        playerHealth = Mathf.Min(playerHealth + 2, Constants.PLAYER_HEALTH_LIMIT);
+        UIManager.Instance.UpdateHeart(playerHealth);
     }
     private void ShootTeardrop(Vector2 direction)
     {
@@ -118,7 +141,18 @@ public class Player : MonoBehaviour
     }
     public void TakeDamage(int damage = 2)
     {
+        if (isInIFrames && Time.time < lastIFrames + Constants.PLAYER_I_FRAMES_TIME) return;
+        if (damage >= playerHealth)
+        {
+            playerHealth = 0;
+            UIManager.Instance.UpdateHeart(playerHealth);
+            GameManager.Instance.GameOver(false);
+            Destroy(gameObject);
+        }
         playerHealth -= damage;
-        UIManager.Instance.UpdateHeart(damage);
+        isInIFrames = true;
+        lastIFrames = Time.time;
+        playerHead.StartFlash();
+        UIManager.Instance.UpdateHeart(playerHealth);
     }
 }

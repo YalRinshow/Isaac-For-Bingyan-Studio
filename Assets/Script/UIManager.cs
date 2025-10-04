@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,26 +32,6 @@ public class UIManager : MonoBehaviour
         currentEnergy = 0;
         UpdateEnergy(0);
     }
-    public void UpdateHeart(int damage)
-    {
-        while (damage > 0)
-        {
-            if (currentHeart % 2 == 1)
-            {
-                heart[(currentHeart + 1 >> 1) - 1].sprite = emptyHeart;
-            }
-            else
-            {
-                heart[(currentHeart >> 1) - 1].sprite = halfHeart;
-            }
-            damage--;
-            currentHeart--;
-            if (currentHeart == 0)
-            {
-                GameManager.Instance.GameOver(false);
-            }
-        }
-    }
     public void UpdateEnergy(int energy)
     {
         currentEnergy = Mathf.Min(currentEnergy + energy, 6);
@@ -61,6 +42,19 @@ public class UIManager : MonoBehaviour
         for (int i = currentEnergy; i < 6; i++)
         {
             UpdateSpriteRender(energySlots[i].GetComponent<SpriteRenderer>(), Color.white);
+        }
+    }
+    public void UpdateHeart(int health)
+    {
+        currentHeart = health;
+        for (int i = 0; i < 3; i++) heart[i].sprite = emptyHeart;
+        for (int i = 0; i < (currentHeart >> 1); i++)
+        {
+            heart[i].sprite = fullHeart;
+        }
+        if (currentHeart % 2 == 1)
+        {
+            heart[(currentHeart + 1 >> 1) - 1].sprite = halfHeart;
         }
     }
     private void UpdateSpriteRender(SpriteRenderer sprite, Color color)
