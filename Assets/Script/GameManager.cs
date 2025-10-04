@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverPanel;
     public GameObject gameScene;
     public GameObject UIPanel;
+    public GameObject menuPanel;
+    public Button startButton;
     public TextMeshProUGUI gameOverText;
     public AudioSource backgroundMusic;
     public string audioFilePath = Constants.MUSIC_FILE;
@@ -24,14 +27,25 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void Start()
+    private void Start()
     {
+        menuPanel.SetActive(true);
+        gameScene.SetActive(false);
+        UIPanel.SetActive(false);
         gameOverPanel.SetActive(false);
+        startButton.onClick.AddListener(() => StartGame());
+        PlayMusic(audioFilePath + Constants.MUSIC_MENU, backgroundMusic);
+    }
+    private void StartGame()
+    {
+        menuPanel.SetActive(false);
+        gameScene.SetActive(true);
+        UIPanel.SetActive(true);
         PlayMusic(audioFilePath + Constants.MUSIC_GAME, backgroundMusic);
         Prefabs.LoadPrefabs();
         LoadMapAndEnemy();
     }
-    void LoadMapAndEnemy()
+    private void LoadMapAndEnemy()
     {
         Map.Instance.Initialize();
     }
