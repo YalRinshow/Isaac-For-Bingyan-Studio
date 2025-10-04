@@ -16,6 +16,7 @@ public class Prefabs : MonoBehaviour
 
     public static GameObject attackFlyPrefab;
     public static GameObject nerveEndingPrefab;
+    public static GameObject knightPrefab;
 
     private static string path = "Prefabs/";
 
@@ -28,6 +29,7 @@ public class Prefabs : MonoBehaviour
     private static string ROCK = "Rock";
     private static string ATTACKFLY = "AttackFly";
     private static string NERVEENDING = "NerveEnding";
+    private static string KNIGHT = "Knight";
 
     public static void LoadPrefabs()
     {
@@ -40,5 +42,6 @@ public class Prefabs : MonoBehaviour
         rockPrefab = Resources.Load<GameObject>(path + ROCK);
         attackFlyPrefab = Resources.Load<GameObject>(path + ATTACKFLY);
         nerveEndingPrefab = Resources.Load<GameObject>(path + NERVEENDING);
+        knightPrefab = Resources.Load<GameObject>(path + KNIGHT);
     }
 }

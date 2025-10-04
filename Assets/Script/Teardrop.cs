@@ -32,7 +32,7 @@ public class Teardrop : MonoBehaviour
             var enemy = collision.gameObject.GetComponentInParent<Enemy>();
             if (enemy.teardropEffective)
             {
-                enemy.TakeDamage(teardropDamage);
+                enemy.TakeTeardropDamage(teardropDamage, this.direction);
             }
             Destroy(gameObject);
         }

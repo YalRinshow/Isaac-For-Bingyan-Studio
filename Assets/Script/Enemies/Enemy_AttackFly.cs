@@ -11,11 +11,14 @@ public class Enemy_AttackFly : Enemy
         isEilite = eilite;
         speedMove= 0.4f;
         flyingEnemy = true;
-        Debug.Log("fly");
     }
     private void FixedUpdate()
     {
         Vector2 direction = (Player.Instance.rbPlayer.position - rbEnemy.position).normalized;
         transform.Translate(direction * speedMove * Time.deltaTime);
+    }
+    public override void TakeTeardropDamage(float damage, Vector2 direction)
+    {
+        TakeDamage(damage);
     }
 }

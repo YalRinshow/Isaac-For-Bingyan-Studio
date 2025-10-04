@@ -10,11 +10,13 @@ public class Room : MonoBehaviour
     public Vector2[] spawnPosition = new Vector2[4];
     public Vector2[] doorPosition = new Vector2[4];
     public float[] doorRotation = new float[4];
+    public bool isEnemyClear = false;
     public bool isActivated = false;
     private List<Vector2> availablePositions = new List<Vector2>();
     private List<bool> usedPosition = new List<bool>();
-    public void Initialize(bool activate = false)
+    public void Initialize(bool enemyClear = false, bool activate = false)
     {
+        isEnemyClear = enemyClear;
         isActivated = activate;
         doorPosition[0] = new Vector2(0, 3.4f);
         doorRotation[0] = 0.0f;
@@ -28,24 +30,16 @@ public class Room : MonoBehaviour
         spawnPosition[1] = new Vector2(0, -3.0f);
         spawnPosition[2] = new Vector2(-5.0f, 0);
         spawnPosition[3] = new Vector2(5.0f, 0);
-        for (int x = -4; x <= 3; x++)
+    }
+    private void FixedUpdate()
+    {
+        if (!isActivated) return;
+        if (isEnemyClear) return;
+        if (EnemyClear())
         {
-            for (int y = -2; y <= 0; y++)
-            {
-                availablePositions.Add(new Vector2(x + 0.5f, y + 0.5f));
-                usedPosition.Add(false);
-            }
+            isEnemyClear = true;
+            UIManager.Instance.UpdateEnergy(1);
         }
-        availablePositions.Add(new Vector2(-3.5f, 1.5f));
-        availablePositions.Add(new Vector2(-3.5f, -2.5f));
-        availablePositions.Add(new Vector2(3.5f, 1.5f));
-        availablePositions.Add(new Vector2(3.5f, -2.5f));
-        availablePositions.Add(new Vector2(-2.5f, 1.5f));
-        availablePositions.Add(new Vector2(-2.5f, -2.5f));
-        availablePositions.Add(new Vector2(2.5f, 1.5f));
-        availablePositions.Add(new Vector2(2.5f, -2.5f));
-        for (int i = 0; i < 8; i++) usedPosition.Add(false);
-        Shuffle();
     }
     public bool EnemyClear()
     {
@@ -67,9 +61,27 @@ public class Room : MonoBehaviour
     public void GenerateEnemisAndGround()
     {
         if (isActivated) return;
+        for (int x = -4; x <= 3; x++)
+        {
+            for (int y = -2; y <= 0; y++)
+            {
+                availablePositions.Add(new Vector2(x + 0.5f, y + 0.5f));
+                usedPosition.Add(false);
+            }
+        }
+        availablePositions.Add(new Vector2(-3.5f, 1.5f));
+        availablePositions.Add(new Vector2(-3.5f, -2.5f));
+        availablePositions.Add(new Vector2(3.5f, 1.5f));
+        availablePositions.Add(new Vector2(3.5f, -2.5f));
+        availablePositions.Add(new Vector2(-2.5f, 1.5f));
+        availablePositions.Add(new Vector2(-2.5f, -2.5f));
+        availablePositions.Add(new Vector2(2.5f, 1.5f));
+        availablePositions.Add(new Vector2(2.5f, -2.5f));
+        for (int i = 0; i < 8; i++) usedPosition.Add(false);
+        Shuffle();
         isActivated = true;
         int size = availablePositions.Count;
-        int randEnemis = Random.Range(1, 5);
+        int randEnemis = Random.Range(1, 6);
         int randGrounds = Random.Range(0, 10);
         for (int i = 0; i < size && randEnemis > 0; i++)
         {
@@ -87,6 +99,23 @@ public class Room : MonoBehaviour
             usedPosition[i] = true;
         }
     }
+    private void GenerateEnemy(Vector2 position)
+    {
+        int randEnemy = Random.Range(0, 7);
+        if (randEnemy == 0)
+        {
+            GenerateObject(Prefabs.knightPrefab, position, true);
+        }
+        else if (randEnemy % 2 == 1)
+        {
+            GenerateObject(Prefabs.attackFlyPrefab, position, true);
+        }
+        else
+        {
+            GenerateObject(Prefabs.nerveEndingPrefab, position, true);
+        }
+        
+    }
     private void GenerateGround(Vector2 position)
     {
         int randGround = Random.Range(0, 4);
@@ -99,25 +128,14 @@ public class Room : MonoBehaviour
             GenerateObject(Prefabs.rockPrefab, position);
         }
     }
-    private void GenerateEnemy(Vector2 position)
-    {
-        int randEnemy = Random.Range(0, 2);
-        if (randEnemy == 0)
-        {
-            GenerateObject(Prefabs.attackFlyPrefab, position, true);
-        }
-        else
-        {
-            GenerateObject(Prefabs.nerveEndingPrefab, position, true);
-        }
-    }
     private void GenerateObject(GameObject prefab, Vector2 position, bool isEnemy = false)
     {
         GameObject newObject = Instantiate(prefab, transform);
-        newObject.transform.localPosition = position;
+        newObject.transform.localPosition = new Vector3(position.x, position.y ,15);
         newObject.transform.localRotation = Quaternion.identity;
         if (isEnemy)
         {
+            newObject.transform.localPosition = new Vector3(position.x, position.y ,10);
             Enemy enemy = newObject.GetComponent<Enemy>();
             enemy.Initialize(false);
         }
@@ -147,6 +165,6 @@ public class Room : MonoBehaviour
         return Mathf.Abs(x - y) < 0.01;
     }
 
-    // [Enemy] AttackFly : NerveEnding = 1 : 1
+     //[Enemy] AttackFly : NerveEnding : Knight = 3 : 3 : 1
     // [Ground] Rock : Spikes = 3 : 1
 }

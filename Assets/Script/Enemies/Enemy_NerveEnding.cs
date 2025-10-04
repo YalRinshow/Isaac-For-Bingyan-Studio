@@ -11,4 +11,8 @@ public class Enemy_NerveEnding : Enemy
         rbEnemy = GetComponent<Rigidbody2D>();
         isEilite = eilite;
     }
+    public override void TakeTeardropDamage(float damage, Vector2 direction)
+    {
+        TakeDamage(damage);
+    }
 }

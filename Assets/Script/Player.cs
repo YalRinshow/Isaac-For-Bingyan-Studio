@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
 
     public int playerHealth = 6;
 
+    public GameObject head;
+    public Head playerHead;
+
     public static Player Instance { get; private set; }
 
     private void Awake()
@@ -44,14 +47,22 @@ public class Player : MonoBehaviour
         float moveX = Input.GetAxis(Constants.DIRECTION_HORIZONTAL);
         float moveY = Input.GetAxis(Constants.DIRECTION_VERTICAL);
         Vector2 moveDirection = new Vector2(moveX, moveY).normalized;
+        if (Mathf.Abs(moveX) < 0.01f)
+        {
+            playerHead.UpdateHeadImage(moveY > 0 ? 0 : 1);
+        }
+        else
+        {
+             playerHead.UpdateHeadImage(moveX > 0 ? 3 : 2);
+        }
         rbPlayer.velocity = moveDirection * speedMove;
-        //else rbPlayer.velocity = Vector2.zero;
     }
     public void Initialize()
     {
         bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
         key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
         rbPlayer = GetComponent<Rigidbody2D>();
+        playerHead = head.GetComponent<Head>();
     }
     private void TeardropCheck()
     {

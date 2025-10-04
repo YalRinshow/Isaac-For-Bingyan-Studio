@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour
     {
         Map.Instance.Initialize();
     }
-    void Update()
-    {
-    }
     public void GameOver(bool win)
     {
         gameScene.SetActive(false);

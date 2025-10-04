@@ -69,7 +69,7 @@ public class Map : MonoBehaviour
         startRoomPrefab.transform.localRotation = Quaternion.identity;
         Room startRoom = startRoomPrefab.GetComponent<Room>();
         rooms.Add(startRoom);
-        startRoom.Initialize(true);
+        startRoom.Initialize(true, true);
         roomInfo.Add(new connectInfo());
 
         Player.Instance.transform.SetParent(startRoomPrefab.transform, false);
@@ -154,7 +154,7 @@ public class Map : MonoBehaviour
         newRoomPrefab.transform.localRotation = Quaternion.identity;
         Room newRoom = newRoomPrefab.GetComponent<Room>();
         rooms.Add(newRoom);
-        newRoom.Initialize(false);
+        newRoom.Initialize(false, false);
 
         GameObject newDoorPrefab = Instantiate(Prefabs.doorPrefab, rooms[roomNumber].transform);
         newDoorPrefab.transform.localPosition = rooms[roomNumber].doorPosition[roomDir];

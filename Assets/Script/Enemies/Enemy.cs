@@ -28,6 +28,10 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public virtual void TakeTeardropDamage(float damage, Vector2 direction)
+    {
+
+    }
     public void ItemsDropping()
     {
 

@@ -9,7 +9,9 @@ public class UIManager : MonoBehaviour
     public Sprite fullHeart;
     public Sprite halfHeart;
     public Sprite emptyHeart;
+    public GameObject[] energySlots;
     int currentHeart;
+    int currentEnergy;
     public static UIManager Instance { get; private set; }
     private void Awake()
     {
@@ -26,6 +28,8 @@ public class UIManager : MonoBehaviour
     {
         currentHeart = 6;
         heart[0].sprite = heart[1].sprite = heart[2].sprite = fullHeart;
+        currentEnergy = 0;
+        UpdateEnergy(0);
     }
     public void UpdateHeart(int damage)
     {
@@ -46,5 +50,21 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.GameOver(false);
             }
         }
+    }
+    public void UpdateEnergy(int energy)
+    {
+        currentEnergy = Mathf.Min(currentEnergy + energy, 6);
+        for (int i = 0; i < currentEnergy; i++)
+        {
+            UpdateSpriteRender(energySlots[i].GetComponent<SpriteRenderer>(), Color.yellow);
+        }
+        for (int i = currentEnergy; i < 6; i++)
+        {
+            UpdateSpriteRender(energySlots[i].GetComponent<SpriteRenderer>(), Color.white);
+        }
+    }
+    private void UpdateSpriteRender(SpriteRenderer sprite, Color color)
+    {
+        sprite.color = color;
     }
 }

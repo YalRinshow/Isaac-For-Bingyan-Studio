@@ -13,8 +13,7 @@ public class Spikes : Ground
         else if (collision.gameObject.CompareTag(Constants.TAG_ENEMY))
         {
             var enemy = collision.gameObject.GetComponentInParent<Enemy>();
-            if (!enemy.flyingEnemy)
-                enemy.TakeDamage(Constants.SPIKES_DAMAGE_TO_ENEMY);
+            if (!enemy.flyingEnemy) enemy.TakeDamage(Constants.SPIKES_DAMAGE_TO_ENEMY);
         }
     }
 }
