@@ -16,7 +16,6 @@ public class ItemManager : MonoBehaviour
     public static void GenerateItem(ItemType itemType, Vector2 position)
     {
         Transform parentTransform = Map.rooms[Map.currentRoomNumber].GetComponent<Transform>();
-        Debug.Log(itemType);
         GameObject newObject = Instantiate(GetItemPrefab(itemType), parentTransform);
         newObject.transform.localPosition = new Vector3(position.x, position.y, 15);
         newObject.transform.localRotation = Quaternion.identity;

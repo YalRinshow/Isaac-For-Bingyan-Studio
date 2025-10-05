@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
     public bool teardropEffectInCurrentRoom = false;
 
-    private ItemManager.ItemType currentActiveItem;
+    private ItemManager.ItemType currentActiveItem = ItemManager.ItemType.Null;
 
     private void Awake()
     {
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
     {
         if (currentActiveItem != ItemManager.ItemType.Null)
         {
-            ItemManager.GenerateItem(itemType, transform.localPosition);
+            ItemManager.GenerateItem(currentActiveItem, transform.localPosition);
         }
         UIManager.Instance.UpdateActiveItem(itemType);
         currentActiveItem = itemType;

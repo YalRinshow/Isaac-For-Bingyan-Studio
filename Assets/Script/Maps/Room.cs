@@ -110,6 +110,7 @@ public class Room : MonoBehaviour
             if (usedPosition[i]) continue;
             //Debug.Log("Generate");
             ItemManager.GenerateItem(ItemManager.ItemType.TheInnerEye, availablePositions[i]);
+            usedPosition[i] = true;
             break;
         }
         for (int i = 0; i < size; i++)
@@ -117,6 +118,7 @@ public class Room : MonoBehaviour
             if (usedPosition[i]) continue;
             //Debug.Log("Generate");
             ItemManager.GenerateItem(ItemManager.ItemType.RazorBlade, availablePositions[i]);
+            usedPosition[i] = true;
             break;
         }
     }
