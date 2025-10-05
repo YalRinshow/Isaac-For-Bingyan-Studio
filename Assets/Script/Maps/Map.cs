@@ -192,7 +192,8 @@ public class Map : MonoBehaviour
         int nextRoom = roomInfo[roomNumber].connectedRoomNumber[roomDir];
         int nextDir = roomDir ^ 1;
         currentRoomNumber = nextRoom;
-        rooms[nextRoom].GenerateEnemisAndGround();
+        if (currentRoomNumber == rooms.Count - 1) rooms[nextRoom].GenerateEliteEnemy();
+        else rooms[nextRoom].GenerateEnemisAndGround();
         Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
         nextRoomDoor.isOpen = true;
         Player.Instance.transform.SetParent(rooms[nextRoom].transform, false);
@@ -202,6 +203,7 @@ public class Map : MonoBehaviour
         if (currentRoomNumber == rooms.Count - 1)
         {
             GameManager.Instance.PlayBossMusic();
+            GameManager.Instance.bossHealthBar.SetActive(true);
         }
     }
     public static bool CurrentRoomEnemyClear()

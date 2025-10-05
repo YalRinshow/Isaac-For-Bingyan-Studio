@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,14 @@ public class UIManager : MonoBehaviour
     public Sprite halfHeart;
     public Sprite emptyHeart;
     public GameObject[] energySlots;
+
+    public Image hpImage;
+    public Image hpEffectImage;
+    public float maxBossHp;
+    public float currentBossHp;
+    public float bufferTime = 0.5f;
+    Coroutine hpUpdateCoroutine;
+
     int currentHeart;
     int currentEnergy;
     public static UIManager Instance { get; private set; }
@@ -33,6 +42,8 @@ public class UIManager : MonoBehaviour
         currentEnergy = 0;
         UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_DEFAULT);
         UpdateEnergy(0);
+        //currentEnergy = 6;
+        //UpdateEnergy(6);
     }
     public void UpdateEnergy(int energy)
     {
@@ -63,6 +74,7 @@ public class UIManager : MonoBehaviour
     {
         if (itemType == ItemManager.ItemType.Null) UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_DEFAULT);
         if (itemType == ItemManager.ItemType.RazorBlade) UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_RAZORBLADE);
+        if (itemType == ItemManager.ItemType.TheBookOfSin) UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_THEBOOKOFSIN);
     }
     private void UpdateSpriteRender(SpriteRenderer sprite, Color color)
     {
@@ -79,5 +91,36 @@ public class UIManager : MonoBehaviour
         {
             Debug.Log(Constants.IMAGE_LOAD_FAILED + imagePath);
         }
+    }
+    public void InitializeHealthBar(float health)
+    {
+        maxBossHp = health;
+        currentBossHp = health;
+    }
+    public void DecreaseHealth(float damage)
+    {
+        currentBossHp = Mathf.Clamp(currentBossHp - damage, 0.0f, maxBossHp);
+        UpdateHealthBar();
+    }
+    private void UpdateHealthBar()
+    {
+        hpImage.fillAmount = currentBossHp / maxBossHp;
+        if (hpUpdateCoroutine != null)
+        {
+            StopCoroutine(hpUpdateCoroutine);
+        }
+        hpUpdateCoroutine = StartCoroutine(UpdateHealthBarEffect());
+    }
+    private IEnumerator UpdateHealthBarEffect()
+    {
+        float effectLength = hpEffectImage.fillAmount - hpImage.fillAmount;
+        float elapsedTime = 0.0f;
+        while (elapsedTime < bufferTime && effectLength != 0)
+        {
+            elapsedTime += Time.deltaTime;
+            hpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime / bufferTime);
+            yield return null;
+        }
+        hpEffectImage.fillAmount = hpImage.fillAmount;
     }
 }

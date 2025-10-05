@@ -13,11 +13,16 @@ public class Enemy : MonoBehaviour
     public bool flyingEnemy = false;
     public bool teardropEffective = true;
     public ItemManager.ItemType droppedItemType;
+    public bool isElite;
     public virtual void Initialize(bool dropKey)
     {
     }
     public void TakeDamage(float damage)
     {
+        if (isElite)
+        {
+            UIManager.Instance.DecreaseHealth(damage);
+        }
         health -= damage;
         if (health < 0.001)
         {

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject gameScene;
     public GameObject UIPanel;
+    public GameObject bossHealthBar;
     public GameObject menuPanel;
     public Button startButton;
     public TextMeshProUGUI gameOverText;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
         menuPanel.SetActive(false);
         gameScene.SetActive(true);
         UIPanel.SetActive(true);
+        bossHealthBar.SetActive(false);
         PlayMusic(audioFilePath + Constants.MUSIC_GAME, backgroundMusic);
         Prefabs.LoadPrefabs();
         UIManager.Instance.Initialize();

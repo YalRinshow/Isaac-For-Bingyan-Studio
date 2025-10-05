@@ -28,7 +28,7 @@ public class Constants : MonoBehaviour
 
     public static int ROOM_HEIGHT = 9;
     public static int ROOM_WIDTH = 14;
-    public static int ROOM_DEFAULT_NUMBER = 10;
+    public static int ROOM_DEFAULT_NUMBER = 1;
 
     public static string PREFAB_NOT_FOUND = "prefab not found!";
 
@@ -55,6 +55,7 @@ public class Constants : MonoBehaviour
     public static string IMAGE_ITEM_FILE = "Items/";
     public static string ITEM_DEFAULT = "dice";
     public static string ITEM_RAZORBLADE = "razorblade";
+    public static string ITEM_THEBOOKOFSIN = "thebookofsin";
 
     public static string IMAGE_LOAD_FAILED = "Failed to load image : ";
 }

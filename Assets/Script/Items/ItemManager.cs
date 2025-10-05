@@ -11,6 +11,7 @@ public class ItemManager : MonoBehaviour
         Heart,
         TheInnerEye,
         RazorBlade,
+        TheBookOfSin,
         Null
     }
     public static void GenerateItem(ItemType itemType, Vector2 position)
@@ -29,6 +30,7 @@ public class ItemManager : MonoBehaviour
             ItemType.Heart => Prefabs.heartDroppedPrefab,
             ItemType.TheInnerEye => Prefabs.theInnerEyePrefab,
             ItemType.RazorBlade => Prefabs.razorBladePrefab,
+            ItemType.TheBookOfSin => Prefabs.theBookOfSinPrefab,
             _ => null
         };
     }

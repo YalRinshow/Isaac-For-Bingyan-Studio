@@ -83,6 +83,9 @@ public class Player : MonoBehaviour
         key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
         rbPlayer = GetComponent<Rigidbody2D>();
         playerHead = head.GetComponent<Head>();
+        Teardrop.teardropDamage = Constants.TEARDROP_DAMAGE;
+        SpriteRenderer spriteRenderer = Prefabs.teardropPrefab.GetComponent<SpriteRenderer>();
+        spriteRenderer.color = Color.white;
     }
     private void TheInnerEyeTearDropCheck()
     {
@@ -188,6 +191,7 @@ public class Player : MonoBehaviour
     }
     private void UseActiveItem()
     {
+        bool useActiveItem = false;
         if (currentActiveItem == ItemManager.ItemType.RazorBlade && playerHealth > 2)
         {
             Teardrop.teardropDamage = Constants.TEARDROP_RAZOR_BLADE_DAMAGE;
@@ -195,9 +199,25 @@ public class Player : MonoBehaviour
             spriteRenderer.color = Color.red;
             TakeDamage(2);
             teardropEffectInCurrentRoom = true;
+            useActiveItem = true;
         }
-        UIManager.Instance.UpdateActiveItem(ItemManager.ItemType.Null);
-        currentActiveItem = ItemManager.ItemType.Null;
+        if (currentActiveItem == ItemManager.ItemType.TheBookOfSin && playerEnergy == 6)
+        {
+            playerEnergy = 0;
+            UIManager.Instance.UpdateEnergy(-6);
+            int randItem = Random.Range(0, 3);
+            ItemManager.ItemType item = ItemManager.ItemType.Null;
+            if (randItem == 0) item = ItemManager.ItemType.Key;
+            if (randItem == 1) item = ItemManager.ItemType.Bomb;
+            if (randItem == 2) item = ItemManager.ItemType.Heart;
+            ItemManager.GenerateItem(item, transform.localPosition);
+            useActiveItem = true;
+        }
+        if (useActiveItem)
+        {
+            UIManager.Instance.UpdateActiveItem(ItemManager.ItemType.Null);
+            currentActiveItem = ItemManager.ItemType.Null;
+        }
     }
     public void StopTeardropEffect()
     {

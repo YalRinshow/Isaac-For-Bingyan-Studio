@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Monstro : MonoBehaviour
+public class Enemy_Monstro : Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Initialize(bool dropKey = false)
     {
-        
+        health = 250.0f;
+        rbEnemy = GetComponent<Rigidbody2D>();
+        GetDropItem(dropKey);
+        UIManager.Instance.InitializeHealthBar(health);
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void TakeTeardropDamage(float damage, Vector2 direction)
     {
-        
+        TakeDamage(damage);
     }
 }

@@ -64,6 +64,13 @@ public class Room : MonoBehaviour
             availablePositions[transPos] = t;
         }
     }
+    public void GenerateEliteEnemy()
+    {
+        if (isActivated) return;
+        //availablePositions.Add(new Vector2(-3.0f, -0.5f));
+        GenerateObject(Prefabs.monstroPrefab, new Vector2(-3.0f, -0.5f), true);
+        isActivated = true;
+    }
     public void GenerateEnemisAndGround()
     {
         if (isActivated) return;
@@ -108,7 +115,6 @@ public class Room : MonoBehaviour
         for (int i = 0; i < size; i++)
         {
             if (usedPosition[i]) continue;
-            //Debug.Log("Generate");
             ItemManager.GenerateItem(ItemManager.ItemType.TheInnerEye, availablePositions[i]);
             usedPosition[i] = true;
             break;
@@ -116,8 +122,14 @@ public class Room : MonoBehaviour
         for (int i = 0; i < size; i++)
         {
             if (usedPosition[i]) continue;
-            //Debug.Log("Generate");
             ItemManager.GenerateItem(ItemManager.ItemType.RazorBlade, availablePositions[i]);
+            usedPosition[i] = true;
+            break;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (usedPosition[i]) continue;
+            ItemManager.GenerateItem(ItemManager.ItemType.TheBookOfSin, availablePositions[i]);
             usedPosition[i] = true;
             break;
         }
