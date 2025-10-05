@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Image[] heart;
+    public Image activeItem;
     public Sprite fullHeart;
     public Sprite halfHeart;
     public Sprite emptyHeart;
@@ -25,11 +26,12 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void Start()
+    public void Initialize()
     {
         currentHeart = 6;
         heart[0].sprite = heart[1].sprite = heart[2].sprite = fullHeart;
         currentEnergy = 0;
+        UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_DEFAULT);
         UpdateEnergy(0);
     }
     public void UpdateEnergy(int energy)
@@ -57,8 +59,25 @@ public class UIManager : MonoBehaviour
             heart[(currentHeart + 1 >> 1) - 1].sprite = halfHeart;
         }
     }
+    public void UpdateActiveItem(ItemManager.ItemType itemType)
+    {
+        if (itemType == ItemManager.ItemType.Null) UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_DEFAULT);
+        if (itemType == ItemManager.ItemType.RazorBlade) UpdateActiveItemImage(Constants.IMAGE_ITEM_FILE + Constants.ITEM_RAZORBLADE);
+    }
     private void UpdateSpriteRender(SpriteRenderer sprite, Color color)
     {
         sprite.color = color;
+    }
+    private void UpdateActiveItemImage(string imagePath)
+    {
+        Sprite sprite = Resources.Load<Sprite>(imagePath);
+        if (sprite != null)
+        {
+            activeItem.sprite = sprite;
+        }
+        else
+        {
+            Debug.Log(Constants.IMAGE_LOAD_FAILED + imagePath);
+        }
     }
 }

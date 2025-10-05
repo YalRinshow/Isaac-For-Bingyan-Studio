@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Teardrop : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Teardrop : MonoBehaviour
     private Collider2D cdTeardrop;
     private Vector2 direction;
     private float speedMove = Constants.TEARDROP_SPEED;
-    private float teardropDamage = Constants.TEARDROP_DAMAGE;
+    public static float teardropDamage = Constants.TEARDROP_DAMAGE;
     private void Start()
     {
         rbTeardrop = GetComponent<Rigidbody2D>();

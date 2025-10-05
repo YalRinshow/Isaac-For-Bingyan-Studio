@@ -8,11 +8,15 @@ public class ItemManager : MonoBehaviour
     {
         Key,
         Bomb,
-        Heart
+        Heart,
+        TheInnerEye,
+        RazorBlade,
+        Null
     }
     public static void GenerateItem(ItemType itemType, Vector2 position)
     {
         Transform parentTransform = Map.rooms[Map.currentRoomNumber].GetComponent<Transform>();
+        Debug.Log(itemType);
         GameObject newObject = Instantiate(GetItemPrefab(itemType), parentTransform);
         newObject.transform.localPosition = new Vector3(position.x, position.y, 15);
         newObject.transform.localRotation = Quaternion.identity;
@@ -24,6 +28,8 @@ public class ItemManager : MonoBehaviour
             ItemType.Key => Prefabs.keyDroppedPrefab,
             ItemType.Bomb => Prefabs.bombDroppedPrefab,
             ItemType.Heart => Prefabs.heartDroppedPrefab,
+            ItemType.TheInnerEye => Prefabs.theInnerEyePrefab,
+            ItemType.RazorBlade => Prefabs.razorBladePrefab,
             _ => null
         };
     }

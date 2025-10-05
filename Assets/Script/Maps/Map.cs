@@ -191,13 +191,14 @@ public class Map : MonoBehaviour
     {
         int nextRoom = roomInfo[roomNumber].connectedRoomNumber[roomDir];
         int nextDir = roomDir ^ 1;
+        currentRoomNumber = nextRoom;
         rooms[nextRoom].GenerateEnemisAndGround();
         Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
         nextRoomDoor.isOpen = true;
         Player.Instance.transform.SetParent(rooms[nextRoom].transform, false);
         Player.Instance.transform.localPosition = rooms[nextRoom].spawnPosition[nextDir];
         Player.Instance.transform.rotation = Quaternion.identity;
-        currentRoomNumber = nextRoom;
+        Player.Instance.StopTeardropEffect();
         if (currentRoomNumber == rooms.Count - 1)
         {
             GameManager.Instance.PlayBossMusic();

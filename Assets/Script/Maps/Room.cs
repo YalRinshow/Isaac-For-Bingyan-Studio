@@ -44,6 +44,7 @@ public class Room : MonoBehaviour
                 GameManager.Instance.GameOver(true);
             }
             UIManager.Instance.UpdateEnergy(1);
+            Player.Instance.AddEnergy(1);
         }
     }
     public bool EnemyClear()
@@ -88,6 +89,7 @@ public class Room : MonoBehaviour
         int size = availablePositions.Count;
         int randEnemis = Random.Range(1, 6);
         int randGrounds = Random.Range(0, 10);
+        //int randItem = Random.Range(0, size);
         for (int i = 0; i < size && randEnemis > 0; i++)
         {
             if (usedPosition[i]) continue;
@@ -102,6 +104,20 @@ public class Room : MonoBehaviour
             GenerateGround(availablePositions[i]);
             randGrounds--;
             usedPosition[i] = true;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (usedPosition[i]) continue;
+            //Debug.Log("Generate");
+            ItemManager.GenerateItem(ItemManager.ItemType.TheInnerEye, availablePositions[i]);
+            break;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (usedPosition[i]) continue;
+            //Debug.Log("Generate");
+            ItemManager.GenerateItem(ItemManager.ItemType.RazorBlade, availablePositions[i]);
+            break;
         }
     }
     private void GenerateEnemy(Vector2 position, bool dropKey = false)
@@ -132,6 +148,10 @@ public class Room : MonoBehaviour
         {
             GenerateObject(Prefabs.rockPrefab, position);
         }
+    }
+    private void GenerateItem(Vector2 position)
+    {
+
     }
     private void GenerateObject(GameObject prefab, Vector2 position, bool isEnemy = false, bool dropKey = false)
     {

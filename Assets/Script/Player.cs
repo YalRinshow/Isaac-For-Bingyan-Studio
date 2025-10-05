@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public int keyNumber = 0;
 
     private int playerHealth = Constants.PLAYER_HEALTH_LIMIT;
+    private int playerEnergy = 0;
 
     public GameObject head;
     private Head playerHead;
@@ -23,6 +24,12 @@ public class Player : MonoBehaviour
 
     private float lastIFrames = 0.0f;
     private bool isInIFrames = false;
+
+    private bool theInnerEyeMode = false;
+
+    public bool teardropEffectInCurrentRoom = false;
+
+    private ItemManager.ItemType currentActiveItem;
 
     private void Awake()
     {
@@ -42,7 +49,8 @@ public class Player : MonoBehaviour
     private void Update()
     {
         IFramesCheck();
-        TeardropCheck();
+        if (theInnerEyeMode) TheInnerEyeTearDropCheck();
+        else TeardropCheck();
         ItemCheck();
     }
     private void IFramesCheck()
@@ -76,32 +84,73 @@ public class Player : MonoBehaviour
         rbPlayer = GetComponent<Rigidbody2D>();
         playerHead = head.GetComponent<Head>();
     }
+    private void TheInnerEyeTearDropCheck()
+    {
+        if (Time.time < nextFire) return;
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            StartCoroutine(TheInnerEyeShoot(Vector2.up, rbPlayer.position));
+            nextFire = Time.time + Constants.TEARDROP_THE_INNER_EYE_FIRE_RATE;
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            StartCoroutine(TheInnerEyeShoot(Vector2.down, rbPlayer.position));
+            nextFire = Time.time + Constants.TEARDROP_THE_INNER_EYE_FIRE_RATE;
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            StartCoroutine(TheInnerEyeShoot(Vector2.left, rbPlayer.position));
+            nextFire = Time.time + Constants.TEARDROP_THE_INNER_EYE_FIRE_RATE;
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            StartCoroutine(TheInnerEyeShoot(Vector2.right, rbPlayer.position));
+            nextFire = Time.time + Constants.TEARDROP_THE_INNER_EYE_FIRE_RATE;
+        }
+    }
+    private IEnumerator TheInnerEyeShoot(Vector2 direction, Vector2 postion)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            ShootTeardrop(direction, postion);
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
     private void TeardropCheck()
     {
         if (Time.time < nextFire) return;
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            ShootTeardrop(Vector2.up);
+            ShootTeardrop(Vector2.up, rbPlayer.position);
             nextFire = Time.time + Constants.TEARDROP_FIRE_RATE;
         }
         else
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            ShootTeardrop(Vector2.down);
+            ShootTeardrop(Vector2.down, rbPlayer.position);
             nextFire = Time.time + Constants.TEARDROP_FIRE_RATE;
         }
         else
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            ShootTeardrop(Vector2.left);
+            ShootTeardrop(Vector2.left, rbPlayer.position);
             nextFire = Time.time + Constants.TEARDROP_FIRE_RATE;
         }
         else
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            ShootTeardrop(Vector2.right);
+            ShootTeardrop(Vector2.right, rbPlayer.position);
             nextFire = Time.time + Constants.TEARDROP_FIRE_RATE;
         }
+    }
+    private void ShootTeardrop(Vector2 direction, Vector2 postion)
+    {
+        GameObject teardrop = Instantiate(Prefabs.teardropPrefab, postion, Quaternion.identity);
+        Teardrop teardropPhysics = teardrop.GetComponent<Teardrop>();
+        teardropPhysics.SetDirection(direction);
     }
     private void ItemCheck()
     {
@@ -111,33 +160,79 @@ public class Player : MonoBehaviour
             bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
             GameObject createBomb = Instantiate(Prefabs.bombPrefab, rbPlayer.position, Quaternion.identity);
         }
+        if (Input.GetKeyDown(KeyCode.Q) && currentActiveItem != ItemManager.ItemType.Null)
+        {
+            UseActiveItem();
+        }
+    }
+    public void GetItem(ItemManager.ItemType itemType, bool isActiveItem)
+    {
+        if (isActiveItem)
+        {
+            GetActiveItem(itemType);
+            return;
+        }
+        if (itemType == ItemManager.ItemType.Key) GetKey();
+        if (itemType == ItemManager.ItemType.Bomb) GetBomb();
+        if (itemType == ItemManager.ItemType.Heart) GetHeart();
+        if (itemType == ItemManager.ItemType.TheInnerEye) GetTheInnerEye();
+    }
+    private void GetActiveItem(ItemManager.ItemType itemType)
+    {
+        if (currentActiveItem != ItemManager.ItemType.Null)
+        {
+            ItemManager.GenerateItem(itemType, transform.localPosition);
+        }
+        UIManager.Instance.UpdateActiveItem(itemType);
+        currentActiveItem = itemType;
+    }
+    private void UseActiveItem()
+    {
+        if (currentActiveItem == ItemManager.ItemType.RazorBlade && playerHealth > 2)
+        {
+            Teardrop.teardropDamage = Constants.TEARDROP_RAZOR_BLADE_DAMAGE;
+            SpriteRenderer spriteRenderer = Prefabs.teardropPrefab.GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.red;
+            TakeDamage(2);
+            teardropEffectInCurrentRoom = true;
+        }
+        UIManager.Instance.UpdateActiveItem(ItemManager.ItemType.Null);
+        currentActiveItem = ItemManager.ItemType.Null;
+    }
+    public void StopTeardropEffect()
+    {
+        if (teardropEffectInCurrentRoom)
+        {
+            Teardrop.teardropDamage = Constants.TEARDROP_DAMAGE;
+            SpriteRenderer spriteRenderer = Prefabs.teardropPrefab.GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.white;
+            teardropEffectInCurrentRoom = false;
+        }
+    }
+    private void GetKey()
+    {
+        keyNumber++;
+        key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
     }
     public void GetBomb()
     {
         bombNumber++;
         bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
     }
-    public void GetKey()
-    {
-        keyNumber++;
-        key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
-    }
-    public void UseKey()
-    {
-        keyNumber--;
-        key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
-    }
-    public void GetHeart()
+    private void GetHeart()
     {
         if (playerHealth == Constants.PLAYER_HEALTH_LIMIT) return;
         playerHealth = Mathf.Min(playerHealth + 2, Constants.PLAYER_HEALTH_LIMIT);
         UIManager.Instance.UpdateHeart(playerHealth);
     }
-    private void ShootTeardrop(Vector2 direction)
+    private void GetTheInnerEye()
     {
-        GameObject teardrop = Instantiate(Prefabs.teardropPrefab, rbPlayer.position, Quaternion.identity);
-        Teardrop teardropPhysics= teardrop.GetComponent<Teardrop>();
-        teardropPhysics.SetDirection(direction);
+        theInnerEyeMode = true;
+    }
+    public void UseKey()
+    {
+        keyNumber--;
+        key.GetComponentInChildren<TextMeshProUGUI>().text = keyNumber.ToString("D2");
     }
     public void TakeDamage(int damage = 2)
     {
@@ -154,5 +249,9 @@ public class Player : MonoBehaviour
         lastIFrames = Time.time;
         playerHead.StartFlash();
         UIManager.Instance.UpdateHeart(playerHealth);
+    }
+    public void AddEnergy(int energy)
+    {
+        playerEnergy = Mathf.Min(playerEnergy + energy, 6);
     }
 }

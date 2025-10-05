@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health < 0.001)
         {
+            rbEnemy.velocity = Vector2.zero;
             ItemsDropping();
             Destroy(gameObject);
         }

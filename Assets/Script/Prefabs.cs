@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -13,6 +14,9 @@ public class Prefabs : MonoBehaviour
     public static GameObject bombDroppedPrefab;
     public static GameObject keyDroppedPrefab;
     public static GameObject heartDroppedPrefab;
+
+    public static GameObject theInnerEyePrefab;
+    public static GameObject razorBladePrefab;
 
     public static GameObject spikesPrefab;
     public static GameObject rockPrefab;
@@ -30,6 +34,8 @@ public class Prefabs : MonoBehaviour
     private static string BOMBDROPPED = "BombDropped";
     private static string KEYDROPPED = "KeyDropped";
     private static string HEARTDROPPED = "HeartDropped";
+    private static string THEINNEREYE = "TheInnerEye";
+    private static string RAZORBLADE = "RazorBlade";
     private static string SPIKES = "Spikes";
     private static string ROCK = "Rock";
     private static string ATTACKFLY = "AttackFly";
@@ -45,6 +51,8 @@ public class Prefabs : MonoBehaviour
         bombDroppedPrefab = Resources.Load<GameObject>(path + BOMBDROPPED);
         keyDroppedPrefab = Resources.Load< GameObject>(path + KEYDROPPED);
         heartDroppedPrefab = Resources.Load<GameObject>(path+ HEARTDROPPED);
+        theInnerEyePrefab = Resources.Load<GameObject>(path + THEINNEREYE);
+        razorBladePrefab = Resources.Load<GameObject>(path + RAZORBLADE);
         spikesPrefab = Resources.Load<GameObject>(path + SPIKES);
         rockPrefab = Resources.Load<GameObject>(path + ROCK);
         attackFlyPrefab = Resources.Load<GameObject>(path + ATTACKFLY);

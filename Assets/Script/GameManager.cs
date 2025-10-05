@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         UIPanel.SetActive(true);
         PlayMusic(audioFilePath + Constants.MUSIC_GAME, backgroundMusic);
         Prefabs.LoadPrefabs();
+        UIManager.Instance.Initialize();
         LoadMapAndEnemy();
     }
     private void LoadMapAndEnemy()

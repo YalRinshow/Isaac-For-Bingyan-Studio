@@ -11,8 +11,10 @@ public class Constants : MonoBehaviour
 
     public static float TEARDROP_LIFETIME = 0.6f;
     public static float TEARDROP_FIRE_RATE = 0.2f;
+    public static float TEARDROP_THE_INNER_EYE_FIRE_RATE = 1.0f;
     public static float TEARDROP_SPEED = 6.0f;
     public static float TEARDROP_DAMAGE = 3.5f;
+    public static float TEARDROP_RAZOR_BLADE_DAMAGE = 10.5f;
 
     public static float BOMB_LIFETIME = 3.0f;
     public static float BOMB_RADIUS = 1.2f;
@@ -49,4 +51,10 @@ public class Constants : MonoBehaviour
     public static string MUSIC_GAMEOVER_WIN = "WinMusic";
 
     public static string AUDIO_LOAD_FAILED = "Failed to load audio : ";
+
+    public static string IMAGE_ITEM_FILE = "Items/";
+    public static string ITEM_DEFAULT = "dice";
+    public static string ITEM_RAZORBLADE = "razorblade";
+
+    public static string IMAGE_LOAD_FAILED = "Failed to load image : ";
 }
