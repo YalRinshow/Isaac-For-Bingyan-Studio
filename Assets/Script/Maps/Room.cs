@@ -9,6 +9,7 @@ using UnityEngine.Rendering;
 public class Room : MonoBehaviour
 {
     public int roomNumber;
+    public int distance;
     public Vector2[] spawnPosition = new Vector2[4];
     public Vector2[] doorPosition = new Vector2[4];
     public float[] doorRotation = new float[4];
@@ -17,9 +18,10 @@ public class Room : MonoBehaviour
     private List<Vector2> availablePositions = new List<Vector2>();
     private List<bool> usedPosition = new List<bool>();
     private bool haveKey = false;
-    public void Initialize(int roomNumber, bool enemyClear = false, bool activate = false)
+    public void Initialize(int roomNumber, int distance, bool enemyClear = false, bool activate = false)
     {
         this.roomNumber = roomNumber;
+        this.distance = distance;
         isEnemyClear = enemyClear;
         isActivated = activate;
         doorPosition[0] = new Vector2(0, 3.4f);
@@ -95,11 +97,13 @@ public class Room : MonoBehaviour
         for (int i = 0; i < 8; i++) usedPosition.Add(false);
         Shuffle();
         isActivated = true;
-        int smallRoom = Random.Range(0, 1);
+        int smallRoom = Random.Range(0, 2);
         int randEnemis = 0;
-        if (smallRoom == 0) randEnemis = Random.Range(2, 6);
-        else randEnemis = Random.Range(4, 10);
-        int randGrounds = Random.Range(0, 12);
+        int randGrounds = 0;
+        if (smallRoom == 0) randEnemis = Random.Range(3, 8);
+        else randEnemis = Random.Range(6, 10);
+        if (smallRoom == 0) randGrounds = Random.Range(0, 7);
+        else randGrounds = Random.Range(6, 12);
         //int randItem = Random.Range(0, size);
         for (int i = 0; i < availablePositions.Count && randEnemis > 0; i++)
         {

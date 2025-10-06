@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,11 +19,6 @@ public class Map : MonoBehaviour
     }
     private static List<connectInfo> roomInfo = new List<connectInfo>();
     public static List<Room> rooms = new List<Room>();
-    private class roomGenerateInfo
-    {
-        public int roomNumber;
-        public Vector2 roomPosition;
-    }
     public static int currentRoomNumber;
     int roomTotal = 0;
     public struct point
@@ -42,6 +36,13 @@ public class Map : MonoBehaviour
         new point() { x = -1, y = 0 }, 
         new point() { x = 1, y = 0 } 
     };
+    public class RoomComparer : IComparer<Room>
+    {
+        public int Compare(Room x, Room y)
+        {
+            return y.distance.CompareTo(x.distance);
+        }
+    }
     public static Map Instance { get; private set; }
     private void Awake()
     {
@@ -70,7 +71,7 @@ public class Map : MonoBehaviour
         startRoomPrefab.transform.localRotation = Quaternion.identity;
         Room startRoom = startRoomPrefab.GetComponent<Room>();
         rooms.Add(startRoom);
-        startRoom.Initialize(0, true, true);
+        startRoom.Initialize(0, 0, true, true);
         roomInfo.Add(new connectInfo());
 
         Player.Instance.transform.SetParent(startRoomPrefab.transform, false);
@@ -102,7 +103,7 @@ public class Map : MonoBehaviour
             }
         }
         bool isBossRoomGenerated = false;
-        for (int i = rooms.Count - 1; i >= 0; i--)
+        for (int i = rooms.Count - 1; i >=0 ; i--)
         {
             point currentPoint = roomCoordinate[i];
             int currentRoom = visPoints[currentPoint];
@@ -155,7 +156,7 @@ public class Map : MonoBehaviour
         newRoomPrefab.transform.localRotation = Quaternion.identity;
         Room newRoom = newRoomPrefab.GetComponent<Room>();
         rooms.Add(newRoom);
-        newRoom.Initialize(rooms.Count - 1, false, false);
+        newRoom.Initialize(rooms.Count - 1, rooms[roomNumber].distance + 1, false, false);
 
         GameObject newDoorPrefab = Instantiate(Prefabs.doorPrefab, rooms[roomNumber].transform);
         newDoorPrefab.transform.localPosition = rooms[roomNumber].doorPosition[roomDir];

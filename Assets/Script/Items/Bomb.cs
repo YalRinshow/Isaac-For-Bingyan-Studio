@@ -11,6 +11,8 @@ public class Bomb : MonoBehaviour
     public Collider2D explosionCollider;
     private void Start()
     {
+        //float scaleFactor = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
+        //transform.localScale = Vector3.one * scaleFactor * 2.0f;
         explosionCollider.enabled = false;
         Invoke("Explode", lifetime);
     }

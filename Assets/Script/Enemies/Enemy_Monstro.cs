@@ -71,14 +71,14 @@ public class Enemy_Monstro : Enemy
     private void ShootEnemyTeardrop(bool normalShoot = true)
     {
         lastShoot = Time.time;
-        int teardropNumber = normalShoot ? Random.Range(5, 10) : Random.Range(8, 16);
+        int teardropNumber = normalShoot ? Random.Range(5, 10) : Random.Range(10, 16);
         Vector2 directionToPlayer = (Player.Instance.rbPlayer.position - rbEnemy.position).normalized;
         Debug.Log(directionToPlayer);
         float angle = Mathf.Acos(directionToPlayer.x) * Mathf.Rad2Deg;
         float startAngle = angle - 40.0f;
         float endAngle = angle + 40.0f;
-        float startSpeed = 2.0f;
-        float endSpeed = 4.0f;
+        float startSpeed = 2.0f * 3;
+        float endSpeed = 4.0f * 3;
         for (int i = 0; i < teardropNumber; i++)
         {
             newTeardrop teardrop = GetRandomTeardrop(startAngle, endAngle, startSpeed, endSpeed);

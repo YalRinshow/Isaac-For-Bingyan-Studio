@@ -8,7 +8,7 @@ public class Enemy_AttackFly : Enemy
     {
         health = 5.0f;
         rbEnemy = GetComponent<Rigidbody2D>();
-        speedMove= 0.4f;
+        speedMove= 0.4f * 3;
         flyingEnemy = true;
         droppedItems.Add(ItemManager.ItemType.Key);
         droppedItems.Add(ItemManager.ItemType.Heart);

@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Enemy_Knight : Enemy
 {
-    private float chargeSpeed = 2.0f;
+    private float chargeSpeed = 2.0f * 3;
     private float facingAngle = 60.0f;
     private Vector2[] roamingDir = new Vector2[4] { Vector2.up, Vector2.down, Vector2.left, Vector2.right};
     private int facingDir;
@@ -25,7 +24,7 @@ public class Enemy_Knight : Enemy
         health = 30.0f;
         collisionDamage = 1;
         rbEnemy = GetComponent<Rigidbody2D>();
-        speedMove = 1.0f;
+        speedMove = 1.0f * 3;
         enemyHead = head.GetComponent<Head>();
         droppedItems.Add(ItemManager.ItemType.Key);
         droppedItems.Add(ItemManager.ItemType.Bomb);

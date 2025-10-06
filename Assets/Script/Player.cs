@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
     public Rigidbody2D rbPlayer;
-    private float speedMove = Constants.PLAYER_MOVE_SPEED;
+    private float speedMove = Constants.PLAYER_MOVE_SPEED ;
     private float nextFire = 0.0f;
 
     public GameObject bomb;
@@ -161,7 +162,9 @@ public class Player : MonoBehaviour
         {
             bombNumber--;
             bomb.GetComponentInChildren<TextMeshProUGUI>().text = bombNumber.ToString("D2");
-            GameObject createBomb = Instantiate(Prefabs.bombPrefab, rbPlayer.position, Quaternion.identity);
+            GameObject createBomb = Instantiate(Prefabs.bombPrefab, Map.rooms[Map.currentRoomNumber].gameObject.transform);
+            createBomb.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 15);
+            createBomb.transform.localRotation = Quaternion.identity;
         }
         if (Input.GetKeyDown(KeyCode.Q) && currentActiveItem != ItemManager.ItemType.Null)
         {

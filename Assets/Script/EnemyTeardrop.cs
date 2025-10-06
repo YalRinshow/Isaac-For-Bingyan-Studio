@@ -10,6 +10,8 @@ public class EnemyTeardrop : MonoBehaviour
     public static int teardropDamage = Constants.TEARDROP_ENEMY;
     private void Start()
     {
+        float scaleFactor = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
+        transform.localScale = Vector3.one * scaleFactor * 0.6f;
         Destroy(gameObject, lifetime);
     }
     void FixedUpdate()

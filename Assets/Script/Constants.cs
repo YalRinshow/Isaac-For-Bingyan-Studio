@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Constants : MonoBehaviour
 {
-    public static float PLAYER_MOVE_SPEED = 2.0f;
+    public static float PLAYER_MOVE_SPEED = 2.0f * 3;
     public static int PLAYER_HEALTH_LIMIT = 6;
     public static float PLAYER_I_FRAMES_TIME = 2.0f;
 
     public static float TEARDROP_LIFETIME = 0.6f;
     public static float TEARDROP_FIRE_RATE = 0.2f;
     public static float TEARDROP_THE_INNER_EYE_FIRE_RATE = 1.0f;
-    public static float TEARDROP_SPEED = 6.0f;
+    public static float TEARDROP_SPEED = 6.0f * 3;
     public static float TEARDROP_DAMAGE = 3.5f;
     public static float TEARDROP_RAZOR_BLADE_DAMAGE = 10.5f;
 
@@ -31,7 +30,7 @@ public class Constants : MonoBehaviour
 
     public static int ROOM_HEIGHT = 9;
     public static int ROOM_WIDTH = 14;
-    public static int ROOM_DEFAULT_NUMBER = 10;
+    public static int ROOM_DEFAULT_NUMBER = 11;
 
     public static string PREFAB_NOT_FOUND = "prefab not found!";
 
