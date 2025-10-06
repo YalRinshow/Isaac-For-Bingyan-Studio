@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     private float nextFire = 0.0f;
 
     public GameObject bomb;
-    private int bombNumber = 3;
+    private int bombNumber = 2;
 
     public GameObject key;
     public int keyNumber = 0;

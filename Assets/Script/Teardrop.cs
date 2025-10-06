@@ -7,15 +7,11 @@ using UnityEngine.UI;
 public class Teardrop : MonoBehaviour
 {
     private float lifetime = Constants.TEARDROP_LIFETIME;
-    private Rigidbody2D rbTeardrop;
-    private Collider2D cdTeardrop;
     private Vector2 direction;
     private float speedMove = Constants.TEARDROP_SPEED;
     public static float teardropDamage = Constants.TEARDROP_DAMAGE;
     private void Start()
     {
-        rbTeardrop = GetComponent<Rigidbody2D>();
-        cdTeardrop = GetComponent<Collider2D>();
         Destroy(gameObject, lifetime);
     }
     void FixedUpdate()

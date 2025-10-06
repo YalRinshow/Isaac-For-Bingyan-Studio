@@ -685,7 +685,7 @@ GameObject:
   - component: {fileID: 6796607817064107812}
   - component: {fileID: 166061249444174903}
   - component: {fileID: 1483857984957056402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1692,5 +1692,3 @@ MonoBehaviour:
   - 0
   isEnemyClear: 0
   isActivated: 0
-  rockPrefab: {fileID: 5245917879873533126, guid: 13dd3b19290c7be4e820a1ca2fb4f82f, type: 3}
-  spikesPrefab: {fileID: 7186670721354536357, guid: a006d1284e3a4b84b8eb17544023c3c1, type: 3}

@@ -30,7 +30,14 @@ public class Bomb : MonoBehaviour
                 var enemy = hitCollider.GetComponentInParent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(bombDamage);
+                    if (enemy.isElite)
+                    {
+                        enemy.TakeHpPercentDamage(0.2f);
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(bombDamage);
+                    }
                 }
             }
             else if (hitCollider.CompareTag(Constants.TAG_PLAYER))

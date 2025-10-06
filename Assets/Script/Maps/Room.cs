@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine.Rendering;
 
 public class Room : MonoBehaviour
 {
+    public int roomNumber;
     public Vector2[] spawnPosition = new Vector2[4];
     public Vector2[] doorPosition = new Vector2[4];
     public float[] doorRotation = new float[4];
@@ -15,8 +17,9 @@ public class Room : MonoBehaviour
     private List<Vector2> availablePositions = new List<Vector2>();
     private List<bool> usedPosition = new List<bool>();
     private bool haveKey = false;
-    public void Initialize(bool enemyClear = false, bool activate = false)
+    public void Initialize(int roomNumber, bool enemyClear = false, bool activate = false)
     {
+        this.roomNumber = roomNumber;
         isEnemyClear = enemyClear;
         isActivated = activate;
         doorPosition[0] = new Vector2(0, 3.4f);
@@ -67,8 +70,7 @@ public class Room : MonoBehaviour
     public void GenerateEliteEnemy()
     {
         if (isActivated) return;
-        //availablePositions.Add(new Vector2(-3.0f, -0.5f));
-        GenerateObject(Prefabs.monstroPrefab, new Vector2(-3.0f, -0.5f), true);
+        GenerateObject(Prefabs.monstroPrefab, new Vector2(0.0f, -0.5f), true);
         isActivated = true;
     }
     public void GenerateEnemisAndGround()
@@ -93,18 +95,20 @@ public class Room : MonoBehaviour
         for (int i = 0; i < 8; i++) usedPosition.Add(false);
         Shuffle();
         isActivated = true;
-        int size = availablePositions.Count;
-        int randEnemis = Random.Range(1, 6);
-        int randGrounds = Random.Range(0, 10);
+        int smallRoom = Random.Range(0, 1);
+        int randEnemis = 0;
+        if (smallRoom == 0) randEnemis = Random.Range(2, 6);
+        else randEnemis = Random.Range(4, 10);
+        int randGrounds = Random.Range(0, 12);
         //int randItem = Random.Range(0, size);
-        for (int i = 0; i < size && randEnemis > 0; i++)
+        for (int i = 0; i < availablePositions.Count && randEnemis > 0; i++)
         {
             if (usedPosition[i]) continue;
             GenerateEnemy(availablePositions[i], randEnemis == 1 && !haveKey);
             randEnemis--;
             usedPosition[i] = true;
         }
-        for (int i = 0; i < size && randGrounds > 0; i++)
+        for (int i = 0; i < availablePositions.Count && randGrounds > 0; i++)
         {
             if (usedPosition[i]) continue;
             if (!AvailabeForGround(availablePositions[i])) continue;
@@ -112,24 +116,20 @@ public class Room : MonoBehaviour
             randGrounds--;
             usedPosition[i] = true;
         }
-        for (int i = 0; i < size; i++)
+        // 0.2 InnerEye
+        int randItem = Random.Range(0, 5);
+        if (randItem == 0)GenerateSingleItem(ItemManager.ItemType.TheInnerEye);
+        randItem = Random.Range(0, 5);
+        if (randItem == 0) GenerateSingleItem(ItemManager.ItemType.RazorBlade);
+        randItem = Random.Range(0, 5);
+        if (randItem == 0) GenerateSingleItem(ItemManager.ItemType.TheBookOfSin);
+    }
+    private void GenerateSingleItem(ItemManager.ItemType itemType)
+    {
+        for (int i = 0; i < availablePositions.Count; i++)
         {
             if (usedPosition[i]) continue;
-            ItemManager.GenerateItem(ItemManager.ItemType.TheInnerEye, availablePositions[i]);
-            usedPosition[i] = true;
-            break;
-        }
-        for (int i = 0; i < size; i++)
-        {
-            if (usedPosition[i]) continue;
-            ItemManager.GenerateItem(ItemManager.ItemType.RazorBlade, availablePositions[i]);
-            usedPosition[i] = true;
-            break;
-        }
-        for (int i = 0; i < size; i++)
-        {
-            if (usedPosition[i]) continue;
-            ItemManager.GenerateItem(ItemManager.ItemType.TheBookOfSin, availablePositions[i]);
+            ItemManager.GenerateItem(itemType, availablePositions[i]);
             usedPosition[i] = true;
             break;
         }
@@ -177,6 +177,7 @@ public class Room : MonoBehaviour
             newObject.transform.localPosition = new Vector3(position.x, position.y ,10);
             Enemy enemy = newObject.GetComponent<Enemy>();
             enemy.Initialize(dropKey);
+            enemy.belongingRoomNumber = roomNumber;
             if (enemy.droppedItemType == ItemManager.ItemType.Key)
             {
                 haveKey = true;

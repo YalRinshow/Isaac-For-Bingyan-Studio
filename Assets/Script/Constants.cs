@@ -16,6 +16,9 @@ public class Constants : MonoBehaviour
     public static float TEARDROP_DAMAGE = 3.5f;
     public static float TEARDROP_RAZOR_BLADE_DAMAGE = 10.5f;
 
+    public static int TEARDROP_ENEMY = 1;
+    public static float TEARDROP_ENEMY_LIFETIME = 1.5f;
+
     public static float BOMB_LIFETIME = 3.0f;
     public static float BOMB_RADIUS = 1.2f;
     public static int BOMB_DAMAGE = 114514;
@@ -28,7 +31,7 @@ public class Constants : MonoBehaviour
 
     public static int ROOM_HEIGHT = 9;
     public static int ROOM_WIDTH = 14;
-    public static int ROOM_DEFAULT_NUMBER = 1;
+    public static int ROOM_DEFAULT_NUMBER = 10;
 
     public static string PREFAB_NOT_FOUND = "prefab not found!";
 

@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     {
         menuPanel.SetActive(false);
         gameScene.SetActive(true);
+        Player.Instance.gameObject.SetActive(false);
         UIPanel.SetActive(true);
         bossHealthBar.SetActive(false);
         PlayMusic(audioFilePath + Constants.MUSIC_GAME, backgroundMusic);
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
     private void LoadMapAndEnemy()
     {
         Map.Instance.Initialize();
+        Player.Instance.gameObject.SetActive(true);
     }
     public void GameOver(bool win)
     {

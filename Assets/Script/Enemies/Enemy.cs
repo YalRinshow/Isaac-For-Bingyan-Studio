@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public int belongingRoomNumber;
     public Rigidbody2D rbEnemy;
     public int collisionDamage = Constants.ENEMY_COLISION_DAMAGE;
     public bool haveCollisionDamage = true;
@@ -16,6 +17,10 @@ public class Enemy : MonoBehaviour
     public bool isElite;
     public virtual void Initialize(bool dropKey)
     {
+    }
+    public void TakeHpPercentDamage(float percent)
+    {
+        TakeDamage(health * percent);
     }
     public void TakeDamage(float damage)
     {

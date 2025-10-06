@@ -16,6 +16,7 @@ public class Enemy_AttackFly : Enemy
     }
     private void FixedUpdate()
     {
+        if (Map.currentRoomNumber != belongingRoomNumber) return;
         Vector2 direction = (Player.Instance.rbPlayer.position - rbEnemy.position).normalized;
         transform.Translate(direction * speedMove * Time.deltaTime);
     }

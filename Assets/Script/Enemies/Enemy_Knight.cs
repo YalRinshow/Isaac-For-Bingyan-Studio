@@ -34,6 +34,7 @@ public class Enemy_Knight : Enemy
     }
     private void FixedUpdate()
     {
+        if (Map.currentRoomNumber != belongingRoomNumber) return;
         if (isCharging)
         {
             if (Time.time - lastCharge > chargeTime)

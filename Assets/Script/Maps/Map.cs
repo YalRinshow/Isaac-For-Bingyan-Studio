@@ -70,7 +70,7 @@ public class Map : MonoBehaviour
         startRoomPrefab.transform.localRotation = Quaternion.identity;
         Room startRoom = startRoomPrefab.GetComponent<Room>();
         rooms.Add(startRoom);
-        startRoom.Initialize(true, true);
+        startRoom.Initialize(0, true, true);
         roomInfo.Add(new connectInfo());
 
         Player.Instance.transform.SetParent(startRoomPrefab.transform, false);
@@ -89,7 +89,7 @@ public class Map : MonoBehaviour
             roomCoordinate.Add(visPoints[currentPoint], currentPoint);
             int connectRooms = (currentPoint.x == 0 && currentPoint.y == 0 ? Random.Range(1, 5) : Random.Range(0, 5));
             int currentRoom = visPoints[currentPoint];
-            for (int i = 0; i < 20 && connectRooms > 0 && roomTotal < Constants.ROOM_DEFAULT_NUMBER; i++)
+            for (int i = 0; i < 30 && connectRooms > 0 && roomTotal < Constants.ROOM_DEFAULT_NUMBER; i++)
             {
                 int randDir = GetRandomDir();
                 point nextPoint = currentPoint + dir[randDir];
@@ -155,7 +155,7 @@ public class Map : MonoBehaviour
         newRoomPrefab.transform.localRotation = Quaternion.identity;
         Room newRoom = newRoomPrefab.GetComponent<Room>();
         rooms.Add(newRoom);
-        newRoom.Initialize(false, false);
+        newRoom.Initialize(rooms.Count - 1, false, false);
 
         GameObject newDoorPrefab = Instantiate(Prefabs.doorPrefab, rooms[roomNumber].transform);
         newDoorPrefab.transform.localPosition = rooms[roomNumber].doorPosition[roomDir];
@@ -192,7 +192,7 @@ public class Map : MonoBehaviour
         int nextRoom = roomInfo[roomNumber].connectedRoomNumber[roomDir];
         int nextDir = roomDir ^ 1;
         currentRoomNumber = nextRoom;
-        if (currentRoomNumber == rooms.Count - 1) rooms[nextRoom].GenerateEliteEnemy();
+        if (currentRoomNumber == rooms.Count - 1)rooms[nextRoom].GenerateEliteEnemy();
         else rooms[nextRoom].GenerateEnemisAndGround();
         Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
         nextRoomDoor.isOpen = true;
