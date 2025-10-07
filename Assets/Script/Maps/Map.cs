@@ -3,21 +3,34 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class Map : MonoBehaviour
 {
+    private bool activated = false;
+
     public int height = Constants.ROOM_HEIGHT;
     public int width = Constants.ROOM_WIDTH;
     public Transform gridMap;
     public Sprite bossRoomDoor;
 
+    public GameObject miniMap;
+    public Camera miniMapCamera;
+    private Vector3 targetPosition = new Vector3(0, 0, -100);
+    private Transform miniMapCameraPosition;
+
+    private float smoothing = 0.1f;
+
     public static Vector3[] roomDistanceDelta = new Vector3[4];
+    public static point[] miniRoomDistanceDelta = new point[4];
     private class connectInfo
     {
         public int[] connectedRoomNumber = new int[4];
         public Door[] doors = new Door[4];
     }
     private static List<connectInfo> roomInfo = new List<connectInfo>();
+    private static List<SpriteRenderer> miniRoomColor = new List<SpriteRenderer>(); 
+    private static List<point> miniRoomInfo = new List<point>();
     public static List<Room> rooms = new List<Room>();
     public static int currentRoomNumber;
     int roomTotal = 0;
@@ -55,16 +68,33 @@ public class Map : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void LateUpdate()
+    {
+        if (!activated) return;
+        if (targetPosition != miniMapCameraPosition.localPosition)
+        {
+            miniMapCameraPosition.localPosition = Vector3.Lerp(miniMapCameraPosition.localPosition, targetPosition, smoothing);
+        }
+    }
     public void Initialize()
     {
         GenerateMap();
     }
     private void GenerateMap()
     {
+        miniMapCameraPosition = miniMapCamera.GetComponent<Transform>();
+        miniMapCameraPosition.localPosition = new Vector3(-10000, -10000, -100);
+        targetPosition = miniMapCameraPosition.localPosition;
+
         roomDistanceDelta[0] = new Vector3(0, height * 2, 0);
         roomDistanceDelta[1] = new Vector3(0, 0 - height * 2, 0);
         roomDistanceDelta[2] = new Vector3(0 - width * 2, 0, 0);
         roomDistanceDelta[3] = new Vector3(width * 2, 0, 0);
+
+        miniRoomDistanceDelta[0] = new point() { x = 0, y = 120 };
+        miniRoomDistanceDelta[1] = new point() { x = 0, y = -120 };
+        miniRoomDistanceDelta[2] = new point() { x = -120, y = 0 };
+        miniRoomDistanceDelta[3] = new point() { x = 120, y = 0 };
 
         GameObject startRoomPrefab = Instantiate(Prefabs.roomPrefab, Instance.gridMap);
         startRoomPrefab.transform.localPosition = new Vector3(0, 0, 20);
@@ -73,6 +103,13 @@ public class Map : MonoBehaviour
         rooms.Add(startRoom);
         startRoom.Initialize(0, 0, true, true);
         roomInfo.Add(new connectInfo());
+        miniRoomInfo.Add(new point() { x = -10000, y = -10000 });
+        GameObject startMiniRoom = Instantiate(Prefabs.miniRoomPrefab, Instance.miniMap.transform);
+        RectTransform rectTransform = startMiniRoom.GetComponent<RectTransform>();
+        rectTransform.localPosition = new Vector3(-10000, -10000, 0);
+        SpriteRenderer spriteRenderer = startMiniRoom.transform.GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer.color = Color.red;
+        miniRoomColor.Add(spriteRenderer);
 
         Player.Instance.transform.SetParent(startRoomPrefab.transform, false);
         Player.Instance.transform.localPosition = new Vector3(0, 0, 10);
@@ -118,6 +155,12 @@ public class Map : MonoBehaviour
             }
         }
         currentRoomNumber = 0;
+
+        activated = true;
+
+        Debug.Log(rooms.Count);
+        Debug.Log(miniRoomInfo.Count);
+        Debug.Log(miniRoomColor.Count);
     }
     private static void GetDirWeight()
     {
@@ -187,12 +230,30 @@ public class Map : MonoBehaviour
         roomInfo[roomNumber].doors[roomDir] = newDoor;
         roomInfo[rooms.Count - 1].connectedRoomNumber[roomDir ^ 1] = roomNumber;
         roomInfo[rooms.Count - 1].doors[roomDir ^ 1] = newRoomDoor;
+
+        point newminiRoomPoint = miniRoomInfo[roomNumber] + miniRoomDistanceDelta[roomDir];
+
+        miniRoomInfo.Add(newminiRoomPoint);
+
+        GameObject newMiniRoom = Instantiate(Prefabs.miniRoomPrefab, Instance.miniMap.transform);
+        RectTransform rectTransform = newMiniRoom.GetComponent<RectTransform>();
+        rectTransform.localPosition = new Vector3(newminiRoomPoint.x, newminiRoomPoint.y, 0);
+
+        Debug.Log(rectTransform.localPosition);
+
+        SpriteRenderer spriteRenderer = newMiniRoom.transform.GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer.color = Color.white;
+        miniRoomColor.Add(spriteRenderer);
     }
     public static void RoomTransfer(int roomNumber, int roomDir)
     {
+        // currentRoom -> Yellow
+        // nextRoom -> Red
         int nextRoom = roomInfo[roomNumber].connectedRoomNumber[roomDir];
         int nextDir = roomDir ^ 1;
+        miniRoomColor[currentRoomNumber].color = Color.yellow;
         currentRoomNumber = nextRoom;
+        miniRoomColor[currentRoomNumber].color = Color.red;
         if (currentRoomNumber == rooms.Count - 1)rooms[nextRoom].GenerateEliteEnemy();
         else rooms[nextRoom].GenerateEnemisAndGround();
         Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
@@ -206,7 +267,9 @@ public class Map : MonoBehaviour
             GameManager.Instance.PlayBossMusic();
             GameManager.Instance.bossHealthBar.SetActive(true);
         }
+        Instance.targetPosition = new Vector3(miniRoomInfo[nextRoom].x, miniRoomInfo[nextRoom].y, -100);
     }
+    
     public static bool CurrentRoomEnemyClear()
     {
         return rooms[currentRoomNumber].EnemyClear();

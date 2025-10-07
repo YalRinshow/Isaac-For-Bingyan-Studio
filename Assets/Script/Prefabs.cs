@@ -7,6 +7,7 @@ public class Prefabs : MonoBehaviour
 {
     public static GameObject roomPrefab;
     public static GameObject doorPrefab;
+    public static GameObject miniRoomPrefab;
 
     public static GameObject teardropPrefab;
     public static GameObject enemyTeardropPrefab;
@@ -31,6 +32,8 @@ public class Prefabs : MonoBehaviour
 
     private static string ROOM = "Room";
     private static string DOOR = "Door";
+    private static string MINIROOM = "MiniRoom";
+
     private static string TEARDROP = "Teardrop";
     private static string ENEMYTEARDROP = "EnemyTeardrop";
     private static string BOMB = "Bomb";
@@ -53,6 +56,8 @@ public class Prefabs : MonoBehaviour
     {
         roomPrefab = Resources.Load<GameObject>(path + ROOM);
         doorPrefab = Resources.Load<GameObject>(path + DOOR);
+        miniRoomPrefab = Resources.Load<GameObject>(path + MINIROOM);
+
         teardropPrefab = Resources.Load<GameObject>(path + TEARDROP);
         enemyTeardropPrefab = Resources.Load<GameObject>(path + ENEMYTEARDROP);
 
