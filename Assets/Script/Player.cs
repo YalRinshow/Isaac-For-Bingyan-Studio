@@ -170,6 +170,12 @@ public class Player : MonoBehaviour
         {
             UseActiveItem();
         }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Teardrop.teardropDamage = 114514;
+            SpriteRenderer spriteRenderer = Prefabs.teardropPrefab.GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.black;
+        }
     }
     public void GetItem(ItemManager.ItemType itemType, bool isActiveItem)
     {

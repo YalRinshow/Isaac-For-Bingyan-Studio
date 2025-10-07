@@ -22,32 +22,32 @@ public class Map : MonoBehaviour
     private float smoothing = 0.1f;
 
     public static Vector3[] roomDistanceDelta = new Vector3[4];
-    public static point[] miniRoomDistanceDelta = new point[4];
-    private class connectInfo
+    public static Point[] miniRoomDistanceDelta = new Point[4];
+    private class ConnectInfo
     {
         public int[] connectedRoomNumber = new int[4];
         public Door[] doors = new Door[4];
     }
-    private static List<connectInfo> roomInfo = new List<connectInfo>();
+    private static List<ConnectInfo> roomInfo = new List<ConnectInfo>();
     private static List<SpriteRenderer> miniRoomColor = new List<SpriteRenderer>(); 
-    private static List<point> miniRoomInfo = new List<point>();
+    private static List<Point> miniRoomInfo = new List<Point>();
     public static List<Room> rooms = new List<Room>();
     public static int currentRoomNumber;
     int roomTotal = 0;
-    public struct point
+    public struct Point
     {
         public int x, y;
-        public static point operator +(point a, point b)
+        public static Point operator +(Point a, Point b)
         {
-            return new point() { x = a.x + b.x, y = a.y + b.y };
+            return new Point() { x = a.x + b.x, y = a.y + b.y };
         }
     }
     static int[] dirWeight = new int[4];
-    static point[] dir = new point[4] { 
-        new point() { x = 0, y = 1 }, 
-        new point() { x = 0, y = -1 }, 
-        new point() { x = -1, y = 0 }, 
-        new point() { x = 1, y = 0 } 
+    static Point[] dir = new Point[4] { 
+        new Point() { x = 0, y = 1 }, 
+        new Point() { x = 0, y = -1 }, 
+        new Point() { x = -1, y = 0 }, 
+        new Point() { x = 1, y = 0 } 
     };
     public class RoomComparer : IComparer<Room>
     {
@@ -91,10 +91,10 @@ public class Map : MonoBehaviour
         roomDistanceDelta[2] = new Vector3(0 - width * 2, 0, 0);
         roomDistanceDelta[3] = new Vector3(width * 2, 0, 0);
 
-        miniRoomDistanceDelta[0] = new point() { x = 0, y = 120 };
-        miniRoomDistanceDelta[1] = new point() { x = 0, y = -120 };
-        miniRoomDistanceDelta[2] = new point() { x = -120, y = 0 };
-        miniRoomDistanceDelta[3] = new point() { x = 120, y = 0 };
+        miniRoomDistanceDelta[0] = new Point() { x = 0, y = 120 };
+        miniRoomDistanceDelta[1] = new Point() { x = 0, y = -120 };
+        miniRoomDistanceDelta[2] = new Point() { x = -120, y = 0 };
+        miniRoomDistanceDelta[3] = new Point() { x = 120, y = 0 };
 
         GameObject startRoomPrefab = Instantiate(Prefabs.roomPrefab, Instance.gridMap);
         startRoomPrefab.transform.localPosition = new Vector3(0, 0, 20);
@@ -102,8 +102,8 @@ public class Map : MonoBehaviour
         Room startRoom = startRoomPrefab.GetComponent<Room>();
         rooms.Add(startRoom);
         startRoom.Initialize(0, 0, true, true);
-        roomInfo.Add(new connectInfo());
-        miniRoomInfo.Add(new point() { x = -10000, y = -10000 });
+        roomInfo.Add(new ConnectInfo());
+        miniRoomInfo.Add(new Point() { x = -10000, y = -10000 });
         GameObject startMiniRoom = Instantiate(Prefabs.miniRoomPrefab, Instance.miniMap.transform);
         RectTransform rectTransform = startMiniRoom.GetComponent<RectTransform>();
         rectTransform.localPosition = new Vector3(-10000, -10000, 0);
@@ -116,21 +116,21 @@ public class Map : MonoBehaviour
         Player.Instance.transform.rotation = Quaternion.identity;
 
         GetDirWeight();
-        Queue<point> roomPoints = new Queue<point>();
-        Dictionary<point, int> visPoints = new Dictionary<point, int>();
-        Dictionary<int, point> roomCoordinate = new Dictionary<int, point>();
-        roomPoints.Enqueue(new point() { x = 0, y = 0 });
-        visPoints.Add(new point() { x = 0, y = 0 }, 0);
+        Queue<Point> roomPoints = new Queue<Point>();
+        Dictionary<Point, int> visPoints = new Dictionary<Point, int>();
+        Dictionary<int, Point> roomCoordinate = new Dictionary<int, Point>();
+        roomPoints.Enqueue(new Point() { x = 0, y = 0 });
+        visPoints.Add(new Point() { x = 0, y = 0 }, 0);
         while (roomPoints.Count > 0)
         {
-            point currentPoint = roomPoints.Dequeue();
+            Point currentPoint = roomPoints.Dequeue();
             roomCoordinate.Add(visPoints[currentPoint], currentPoint);
             int connectRooms = (currentPoint.x == 0 && currentPoint.y == 0 ? Random.Range(1, 5) : Random.Range(0, 5));
             int currentRoom = visPoints[currentPoint];
             for (int i = 0; i < 30 && connectRooms > 0 && roomTotal < Constants.ROOM_DEFAULT_NUMBER; i++)
             {
                 int randDir = GetRandomDir();
-                point nextPoint = currentPoint + dir[randDir];
+                Point nextPoint = currentPoint + dir[randDir];
                 if (visPoints.ContainsKey(nextPoint)) continue;
                 connectRooms--;
                 GenerateRoom(currentRoom, randDir, currentRoom == 0);
@@ -142,12 +142,12 @@ public class Map : MonoBehaviour
         bool isBossRoomGenerated = false;
         for (int i = rooms.Count - 1; i >=0 ; i--)
         {
-            point currentPoint = roomCoordinate[i];
+            Point currentPoint = roomCoordinate[i];
             int currentRoom = visPoints[currentPoint];
             for (int j = 0; j < 20 && !isBossRoomGenerated; j++)
             {
                 int randDir = GetRandomDir();
-                point nextPoint = currentPoint + dir[randDir];
+                Point nextPoint = currentPoint + dir[randDir];
                 if (visPoints.ContainsKey(nextPoint)) continue;
                 GenerateRoom(currentRoom, randDir, false, true);
                 isBossRoomGenerated = true;
@@ -225,13 +225,13 @@ public class Map : MonoBehaviour
             newRoomDoorImage.sprite = Instance.bossRoomDoor;
         }
 
-        roomInfo.Add(new connectInfo());
+        roomInfo.Add(new ConnectInfo());
         roomInfo[roomNumber].connectedRoomNumber[roomDir] = rooms.Count - 1;
         roomInfo[roomNumber].doors[roomDir] = newDoor;
         roomInfo[rooms.Count - 1].connectedRoomNumber[roomDir ^ 1] = roomNumber;
         roomInfo[rooms.Count - 1].doors[roomDir ^ 1] = newRoomDoor;
 
-        point newminiRoomPoint = miniRoomInfo[roomNumber] + miniRoomDistanceDelta[roomDir];
+        Point newminiRoomPoint = miniRoomInfo[roomNumber] + miniRoomDistanceDelta[roomDir];
 
         miniRoomInfo.Add(newminiRoomPoint);
 
@@ -255,7 +255,7 @@ public class Map : MonoBehaviour
         currentRoomNumber = nextRoom;
         miniRoomColor[currentRoomNumber].color = Color.red;
         if (currentRoomNumber == rooms.Count - 1)rooms[nextRoom].GenerateEliteEnemy();
-        else rooms[nextRoom].GenerateEnemisAndGround();
+        else rooms[nextRoom].GenerateEnemiesAndGround();
         Door nextRoomDoor = roomInfo[nextRoom].doors[nextDir];
         nextRoomDoor.isOpen = true;
         Player.Instance.transform.SetParent(rooms[nextRoom].transform, false);

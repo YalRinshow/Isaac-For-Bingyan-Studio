@@ -75,7 +75,7 @@ public class Room : MonoBehaviour
         GenerateObject(Prefabs.monstroPrefab, new Vector2(0.0f, -0.5f), true);
         isActivated = true;
     }
-    public void GenerateEnemisAndGround()
+    public void GenerateEnemiesAndGround()
     {
         if (isActivated) return;
         for (int x = -4; x <= 3; x++)
@@ -98,24 +98,24 @@ public class Room : MonoBehaviour
         Shuffle();
         isActivated = true;
         int smallRoom = Random.Range(0, 2);
-        int randEnemis = 0;
+        int randEnemies = 0;
         int randGrounds = 0;
-        if (smallRoom == 0) randEnemis = Random.Range(3, 8);
-        else randEnemis = Random.Range(6, 10);
+        if (smallRoom == 0) randEnemies = Random.Range(3, 8);
+        else randEnemies = Random.Range(6, 10);
         if (smallRoom == 0) randGrounds = Random.Range(0, 7);
         else randGrounds = Random.Range(6, 12);
         //int randItem = Random.Range(0, size);
-        for (int i = 0; i < availablePositions.Count && randEnemis > 0; i++)
+        for (int i = 0; i < availablePositions.Count && randEnemies > 0; i++)
         {
             if (usedPosition[i]) continue;
-            GenerateEnemy(availablePositions[i], randEnemis == 1 && !haveKey);
-            randEnemis--;
+            GenerateEnemy(availablePositions[i], randEnemies == 1 && !haveKey);
+            randEnemies--;
             usedPosition[i] = true;
         }
         for (int i = 0; i < availablePositions.Count && randGrounds > 0; i++)
         {
             if (usedPosition[i]) continue;
-            if (!AvailabeForGround(availablePositions[i])) continue;
+            if (!AvailableForGround(availablePositions[i])) continue;
             GenerateGround(availablePositions[i]);
             randGrounds--;
             usedPosition[i] = true;
@@ -158,7 +158,7 @@ public class Room : MonoBehaviour
     private void GenerateGround(Vector2 position)
     {
         int randGround = Random.Range(0, 4);
-        if (randGround == 0 && AvailabeForSpikes(position))
+        if (randGround == 0 && AvailableForSpikes(position))
         {
             GenerateObject(Prefabs.spikesPrefab, position);
         }
@@ -188,7 +188,7 @@ public class Room : MonoBehaviour
             }
         }
     }
-    private bool AvailabeForSpikes(Vector2 position)
+    private bool AvailableForSpikes(Vector2 position)
     {
         if (floatCompare(position.x, -0.5f) && floatCompare(position.y, 0.5f)) return false;
         if (floatCompare(position.x, 0.5f) && floatCompare(position.y, 0.5f)) return false;
@@ -196,7 +196,7 @@ public class Room : MonoBehaviour
         if (floatCompare(position.x, 0.5f) && floatCompare(position.y, -1.5f)) return false;
         return true;
     }
-    private bool AvailabeForGround(Vector2 position)
+    private bool AvailableForGround(Vector2 position)
     {
         if (floatCompare(position.x, -3.5f) && floatCompare(position.y, 1.5f)) return false;
         if (floatCompare(position.x, -3.5f) && floatCompare(position.y, -2.5f)) return false;
